@@ -1,3 +1,17 @@
+.icon { 
+  width: 2.5em; height: 2.5em; 
+  vertical-align: -0.15em; 
+  fill: currentColor; 
+  overflow: hidden; 
+} 
+
+.icon-nav-link { 
+  width: 1.5em; height: 1.5em; 
+  vertical-align: -0.15em; 
+  fill: currentColor; 
+  overflow: hidden; 
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +24,43 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.container {
+  margin-top: 6rem;
+  padding: 1rem 3rem;
+  z-index: 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 3rem;
+  border-bottom: 1px solid #ccc;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.navbar a {
+  color: #333;
+  text-decoration: none;
+  padding: 5px 5px;
+}
+
+.navbar a:hover {
+  background-color: #f3f4f4;
+  border-radius: 10px;
+}
+
+.navbar ul {
+  display: flex;
+  list-style: none;
+}
+
+.navbar li {
+  margin-left: 1rem;
 }
