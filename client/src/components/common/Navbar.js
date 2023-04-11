@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 export default function Navbar() {
     return (
         <div className='navbar'>
-            <div className='navbar_logo'>
+            <div className='navbar-logo'>
                 <svg class="icon" aria-hidden="true"> <use xlinkHref="#icon-React"></use> </svg>
             </div>
 
-            <div className='navbar_links'>
+            <div className='navbar-links'>
                 <ul>
                     <li> <Link to='/'>首页</Link> </li>
                     <li><Link to='/posts'>社群 </Link> </li>

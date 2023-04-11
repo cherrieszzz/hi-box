@@ -36,7 +36,7 @@ code {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 3rem;
+  padding: 0.5rem 2.5rem;
   border-bottom: 1px solid #ccc;
   position: fixed;
   top: 0;
@@ -49,6 +49,11 @@ code {
   color: #333;
   text-decoration: none;
   padding: 5px 5px;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
 }
 
 .navbar a:hover {
