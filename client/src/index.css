@@ -94,11 +94,6 @@ code {
     monospace;
 }
 
-.container {
-  margin-top: 6rem;
-  padding: 1rem 3rem;
-  z-index: 0;
-}
 
 .navbar {
   display: flex;
