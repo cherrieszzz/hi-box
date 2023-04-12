@@ -1,11 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import nav_logo from '../../assets/logo.png'
 
 export default function Navbar() {
     return (
         <div className='navbar'>
             <div className='navbar-logo'>
-                <svg class="icon" aria-hidden="true"> <use xlinkHref="#icon-React"></use> </svg>
+                {/* <svg class="icon" aria-hidden="true"> <use xlinkHref="#icon-React"></use> </svg> */}
+                <img src={nav_logo} alt='logo' />
                 <svg class="icon-search" aria-hidden="true"> <use xlinkHref="#icon-ic_search24px"></use> </svg>
                 <input type='text'></input>
             </div>
