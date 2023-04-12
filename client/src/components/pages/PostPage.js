@@ -4,7 +4,7 @@ import PostDetail from '../PostDetail'
 import CommonLayout from '../layouts/CommonLayout'
 
 export default function PostPage() {
-    const { id } = useParams()
+  const { id } = useParams()
   return (
     <CommonLayout>
         <PostDetail postId={id} />

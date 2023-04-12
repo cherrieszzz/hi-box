@@ -1,12 +1,12 @@
 import React from 'react'
 import PostList from '../PostList'
 import CommonLayout from '../layouts/CommonLayout'
-import Screen from '../Screen'
+import posts from '../../data/posts'
 
-export default function Home() {
+export default function SocialPage() {
   return (
     <CommonLayout>
-        <Screen />
+        <PostList posts={posts} />
     </CommonLayout>
   )
 }

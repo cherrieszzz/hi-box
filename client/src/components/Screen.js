@@ -1,14 +1,14 @@
 import React from 'react'
+import logo from '../assets/logo-simple.png'
 
 export default function Screen() {
   return (
     <div className='screen'>
-         <svg class="icon" aria-hidden="true"> <use xlinkHref="#icon-React"></use> </svg>
-         <h1>Hi Box</h1>
-         <h3>asdasdasdasd asdsadsa asdas d</h3>
+         <h1 className='yellow-green-title'>Hi Box</h1>
+         <h1>你的私人健康管理专家</h1>
          <div className='screen-btn-group'>
-                <button className='btn btn-primary'>开源地址</button>
-                <button className='btn btn-secondary'>官方文档</button>
+                <button className='screen-btn'>注册</button>
+                <button className='screen-btn'>登陆</button>
          </div>
     </div>
   )
