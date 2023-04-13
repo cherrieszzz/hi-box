@@ -1,7 +1,7 @@
 import React from 'react'
 import SignLayout from '../layouts/SignLayout'
 import LoginForm from '../forms/LoginForm'
-import LoginPicture from '../context/LoginPicture'
+import LoginPicture from '../sections/LoginPicture'
 import LoginTestError from '../Models/LoginTestError'
 
 export default function LoginPage() {
