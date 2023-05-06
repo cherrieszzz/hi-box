@@ -2,7 +2,7 @@
 
 module.exports = {
   // 定位index.html文件
-  content: ["./src/**/*.{html,js}"],
+  content: ["./src/**/*.{html,js,jsx}"],
   theme: {
     extend: {},
   },
