@@ -3,12 +3,12 @@ import haut_logo from '../../assets/haut_logo.png'
 import zzuli_logo from '../../assets/zzuli_logo.jpg'
 import hati_logo from '../../assets/hati_logo.png'
 import pony_logo from '../../assets/pony_logo.jpg'
-import styles from './Partner.module.css'
+
 
 function PartnerCard ({ partner }) {
     return (
-        <div className={styles.partner_card}>
-            <img src={partner.img} alt={partner.name} />
+        <div className='px-20 py-5 bg-slate-400 flex justify-center items-center'>
+            <img src={partner.img} alt={partner.name} className='w-15'/>
         </div>
     )
 }
@@ -34,9 +34,9 @@ export default function Partner() {
     ]
 
     return (
-        <div className={styles.partner}>
+        <div className='container w-sm mx-auto'>
             <h2>合作伙伴</h2>
-            <div className={styles.partner_container}>
+            <div className='flex space-x-4 justify-around'>
                 {
                     partnerData.map(( partner ) => {
                         return (
@@ -45,7 +45,6 @@ export default function Partner() {
                     })
                 }
             </div>
-           
         </div>
     )
 }
