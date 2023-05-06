@@ -103,6 +103,31 @@ public class Urls {
      **/
     public class goods{
         final static public String baseUrl="/goods";
+        /**
+         * 商品-评论
+         */
+        final static public String setComment="/setComment";
+        /**
+         * 修改商品上架状态
+         */
+        final static public String updateStatus="/updateStatus";
+
+        /**
+         * 分页显示
+         */
+        final static public String getPageList="/getPageList";
+        /**
+         * 新增分类
+         */
+        final static public String save="/save";
+        /**
+         * 修改分类
+         */
+        final static public String update="/update";
+        /**
+         * 删除分类
+         */
+        final static public String delete="/delete";
     }
     /**
      * @Author WangFK
