@@ -4,8 +4,8 @@ import styles from './Screen.module.css'
 export default function Screen() {
   return (
     <div className={styles.screen}>
-      <h1>
-        <span className={styles.yellow_green_title}>Hi Box</span>
+      <h1 className=''>
+        <span className='text-7xl'>Hi Box</span>
         <br />
         你的私人健康管理专家1</h1>
       <p className={styles.description}>交互式健康交流社群</p>
