@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
+import com.itheima.util.Urls;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Slf4j
-@RequestMapping("/goods")
+@RequestMapping(Urls.goods.baseUrl)
 public class GoodsController {
     /**
      * 服务对象

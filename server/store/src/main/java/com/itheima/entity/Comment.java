@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 商品评论(Comment)表实体类
  *
  * @author WangFK
- * @since 2023-05-05 14:35:23
+ * @since 2023-05-06 09:13:07
  */
 @Data
 @NoArgsConstructor

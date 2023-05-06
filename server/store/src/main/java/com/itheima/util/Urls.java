@@ -25,7 +25,22 @@ public class Urls {
 
      public class address{
          final static public String baseUrl="/address";
-         final static public  String Test="/Test";
+        /**
+         * 分页显示
+         */
+        final static public String getPageList="/getPageList";
+        /**
+         * 新增地址
+         */
+        final static public String save="/save";
+        /**
+         * 修改地址
+         */
+        final static public String update="/update";
+        /**
+         * 删除地址
+         */
+        final static public String delete="/delete";
     }
     /**
      * @Author WangFK
@@ -64,6 +79,22 @@ public class Urls {
      **/
     public class comment{
         final static public String baseUrl="/comment";
+        /**
+         * 分页显示
+         */
+        final static public String getPageList="/getPageList";
+        /**
+         * 新增分类
+         */
+        final static public String save="/save";
+        /**
+         * 修改分类
+         */
+        final static public String update="/update";
+        /**
+         * 删除分类
+         */
+        final static public String delete="/delete";
     }
     /**
      * @Author WangFK
