@@ -104,9 +104,13 @@ public class Urls {
     public class goods{
         final static public String baseUrl="/goods";
         /**
-         *
+         * 商品-评论
          */
-        final static public String updateStatus="/goods";
+        final static public String setComment="/setComment";
+        /**
+         * 修改商品上架状态
+         */
+        final static public String updateStatus="/updateStatus";
 
         /**
          * 分页显示

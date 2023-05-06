@@ -7,10 +7,13 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.itheima.dto.CommentDto;
 import com.itheima.dto.GoodsDto;
 import com.itheima.entity.Category;
+import com.itheima.entity.Comment;
 import com.itheima.entity.Goods;
 import com.itheima.service.CategoryService;
+import com.itheima.service.CommentService;
 import com.itheima.service.GoodsService;
 import com.itheima.entity.Result;
 
@@ -40,8 +43,17 @@ public class GoodsController {
     private GoodsService goodsService;
     @Resource
     private CategoryService categoryService;
+    @Resource
+    private CommentService commentService;
+    @PostMapping(Urls.goods.setComment)
+    public Result setComment(@RequestBody CommentDto commentDto){
+        return commentService.setComment(commentDto)?Result.success("设置评论成功"):Result.fail("设置评论失败");
+    }
 
     @PostMapping(Urls.goods.updateStatus)
+    public Result updateStatus(@RequestBody Integer status,@RequestBody Long id){
+        return goodsService.updateStatus(status,id)? Result.success("修改状态成功"): Result.fail("修改状态失败");
+    }
     @GetMapping(Urls.goods.getPageList)
     public Result getPageList(Long pageNum,Long pageSize,String search){
         Page<Goods> goodsPage = new Page<>(pageNum, pageSize);
@@ -121,9 +133,13 @@ public class GoodsController {
      * @param goods 实体对象
      * @return 修改结果
      */
-    @PutMapping
+    @PutMapping(Urls.goods.update)
     public Result update(@RequestBody Goods goods) {
-        return Result.success("功能未开发");
+        Result result = getResult(goods);
+        if (result != null) {
+            return result;
+        }
+        return goodsService.updateById(goods)?Result.success("修改商品成功"):Result.fail("修改商品失败");
     }
 
     /**
@@ -132,9 +148,9 @@ public class GoodsController {
      * @param idList 主键结合
      * @return 删除结果
      */
-    @DeleteMapping
-    public Result delete(@RequestParam("idList") List<Long> idList) {
-        return Result.success("功能未开发");
+    @DeleteMapping(Urls.goods.delete)
+    public Result delete(@RequestParam("idList") List<String> idList) {
+        return goodsService.removeByIds(idList)?Result.success("删除商品成功"):Result.fail("删除商品失败");
     }
 }
 

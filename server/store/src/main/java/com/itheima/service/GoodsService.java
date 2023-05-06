@@ -10,5 +10,7 @@ import com.itheima.entity.Goods;
  * @since 2023-05-05 14:35:22
  */
 public interface GoodsService extends IService<Goods> {
+    boolean updateStatus(Integer status,Long id);
+
 }
 

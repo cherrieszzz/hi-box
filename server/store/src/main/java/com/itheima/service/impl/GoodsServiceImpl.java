@@ -6,6 +6,8 @@ import com.itheima.dao.GoodsMapper;
 import com.itheima.entity.Goods;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * 商品信息(Goods)表服务实现类
  *
@@ -14,5 +16,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsService {
+    @Resource
+    private GoodsMapper goodsMapper;
+    @Override
+    public boolean updateStatus(Integer status,Long id) {
+        return  goodsMapper.updateStatus(status,id);
+
+    }
 }
 
