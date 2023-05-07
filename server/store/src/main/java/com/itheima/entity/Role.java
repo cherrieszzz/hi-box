@@ -58,11 +58,6 @@ public class Role implements Serializable {
     @ApiModelProperty(value = "最新更新时间")
     private Date updateTime;
 
-    /**
-     * 操作人
-     */
-    @ApiModelProperty(value = "操作人")
-    private String updateUser;
 
 }
 
