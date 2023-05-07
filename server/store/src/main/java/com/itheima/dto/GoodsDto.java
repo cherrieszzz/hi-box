@@ -3,6 +3,8 @@ package com.itheima.dto;
 import com.itheima.entity.Goods;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 商品dto
  *
@@ -13,4 +15,5 @@ import lombok.Data;
 @Data
 public class GoodsDto extends Goods {
     public String categoryName;
+    List<String>imgList;
 }

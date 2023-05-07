@@ -104,6 +104,10 @@ public class Urls {
     public class goods{
         final static public String baseUrl="/goods";
         /**
+         * 图片上传
+         */
+        final static public String upload="/upload";
+        /**
          * 商品-评论
          */
         final static public String setComment="/setComment";
@@ -117,15 +121,15 @@ public class Urls {
          */
         final static public String getPageList="/getPageList";
         /**
-         * 新增分类
+         * 新增
          */
         final static public String save="/save";
         /**
-         * 修改分类
+         * 修改
          */
         final static public String update="/update";
         /**
-         * 删除分类
+         * 删除
          */
         final static public String delete="/delete";
     }
@@ -144,6 +148,32 @@ public class Urls {
      **/
     public class setMeal{
         final static public String baseUrl="/setmeal";
+        /**
+         * 修改套餐上架状态
+         */
+        final static public String updateStatus="/updateStatus";
+        /**
+         * 根据商品分类返回商品信息
+         */
+        final static public String getGoodsByCategoryId="/getGoodsByCategoryId";
+
+        /**
+         * 分页显示
+         */
+        final static public String getPageList="/getPageList";
+        /**
+         * 新增
+         */
+        final static public String save="/save";
+        /**
+         * 修改
+         */
+        final static public String update="/update";
+        /**
+         * 删除
+         */
+        final static public String delete="/delete";
+
     }
     /**
      * @Author WangFK

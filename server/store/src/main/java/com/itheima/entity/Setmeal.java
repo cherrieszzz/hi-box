@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 套餐(Setmeal)表实体类
  *
  * @author WangFK
- * @since 2023-05-05 14:35:24
+ * @since 2023-05-07 17:21:36
  */
 @Data
 @NoArgsConstructor
@@ -33,9 +33,9 @@ public class Setmeal implements Serializable {
     private Long id;
 
     /**
-     * 菜品分类id
+     * 商品分类id
      */
-    @ApiModelProperty(value = "菜品分类id")
+    @ApiModelProperty(value = "商品分类id")
     private Long categoryId;
 
     /**
@@ -57,10 +57,10 @@ public class Setmeal implements Serializable {
     private Integer status;
 
     /**
-     * 编码
+     * 份数
      */
-    @ApiModelProperty(value = "编码")
-    private String code;
+    @ApiModelProperty(value = "份数")
+    private Long copies;
 
     /**
      * 描述信息
@@ -85,24 +85,6 @@ public class Setmeal implements Serializable {
      */
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
-
-    /**
-     * 创建人
-     */
-    @ApiModelProperty(value = "创建人")
-    private Long createUser;
-
-    /**
-     * 修改人
-     */
-    @ApiModelProperty(value = "修改人")
-    private Long updateUser;
-
-    /**
-     * 是否删除
-     */
-    @ApiModelProperty(value = "是否删除")
-    private Integer isDeleted;
 
 }
 

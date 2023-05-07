@@ -262,7 +262,7 @@ public class UserController {
      */
     @ApiOperation(value = "删除接口",notes = "可批量删除")
     @ApiImplicitParam(name = "idList",dataType = "List<String>",value = "可批量删除")
-    @DeleteMapping
+    @DeleteMapping(Urls.user.delete)
     public Result delete(@RequestParam("idList") List<String> idList) {
         // 删除图片
         List<String> collect = userService.listByIds(idList).stream().map(User::getAvatar).filter(StrUtil::isNotBlank).collect(Collectors.toList());

@@ -93,17 +93,6 @@ public class Goods implements Serializable {
     @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
-    /**
-     * 创建人
-     */
-    @ApiModelProperty(value = "创建人")
-    private String createUser;
-
-    /**
-     * 修改人
-     */
-    @ApiModelProperty(value = "修改人")
-    private String updateUser;
 
 }
 
