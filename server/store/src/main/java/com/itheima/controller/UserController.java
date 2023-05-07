@@ -55,7 +55,7 @@ public class UserController {
      */
     @Resource
     private UserService userService;
-
+    @ApiOperation(notes = "头像上传接口",value = "用户头像上传接口")
     @PostMapping(Urls.user.upload)
     Result Upload(@RequestBody MultipartFile imgFile) {
         //文件全名  eg：7d104dd7-15cd-42c5-9a85-b60ea6f423c2.jpg
@@ -231,6 +231,12 @@ public class UserController {
         return userService.updateById(user)?Result.success("修改成功"):Result.fail("修改失败");
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value = "用户id",dataType = "String"),
+            @ApiImplicitParam(name = "oldPassword",value = "原密码",dataType = "String"),
+            @ApiImplicitParam(name = "newPassword",value = "新密码",dataType = "String")
+    })
+    @ApiOperation(notes = "修改密码接口",value = "修改密码接口")
     @PostMapping(Urls.user.updatePassword)
     Result updatePassword(@RequestBody Map map){
         String id = String.valueOf(map.get("id"));
