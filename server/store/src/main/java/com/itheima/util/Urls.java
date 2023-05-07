@@ -169,6 +169,15 @@ public class Urls {
     public class user{
         final static public String baseUrl="/user";
         /**
+         * 图片上传
+         */
+        final static public String upload="/upload";
+        /**
+         * 修改密码
+         */
+        final static public String updatePassword="/updatePassword";
+
+        /**
          * 注册
          */
         final static public String registered="/registered";

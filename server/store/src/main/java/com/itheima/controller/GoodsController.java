@@ -146,7 +146,7 @@ public class GoodsController {
      * 删除数据
      *
      * @param idList 主键结合
-     * @return 删除结果1
+     * @return 删除结果
      */
     @DeleteMapping(Urls.goods.delete)
     public Result delete(@RequestParam("idList") List<String> idList) {
