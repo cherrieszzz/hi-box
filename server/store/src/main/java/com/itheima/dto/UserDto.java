@@ -3,6 +3,8 @@ package com.itheima.dto;
 import com.itheima.entity.User;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 用户信息显示
  *
