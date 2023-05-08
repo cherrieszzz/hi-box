@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import com.itheima.service.SetmealService;
 import com.itheima.util.QiniuUtils;
 import com.itheima.util.Urls;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,9 +75,15 @@ public class GoodsController {
         return commentService.setComment(commentDto)?Result.success("设置评论成功"):Result.fail("设置评论失败");
     }
 
-    @PostMapping(Urls.goods.updateStatus)
-    public Result updateStatus(@RequestBody Integer status,@RequestBody Long id){
-        return goodsService.updateStatus(status,id)? Result.success("修改状态成功"): Result.fail("修改状态失败");
+    @GetMapping(Urls.goods.updateStatus)
+    public Result updateStatus( Long id){
+        Goods one = goodsService.getById(id);
+        if (one.getStatus()==1){
+            one.setStatus(0);
+        }else{
+            one.setStatus(1);
+        }
+        return goodsService.updateById(one)? Result.success("修改状态成功"): Result.fail("修改状态失败");
     }
     @GetMapping(Urls.goods.getPageList)
     public Result getPageList(Long pageNum,Long pageSize,String name,String status,String categoryId){
@@ -132,11 +139,13 @@ public class GoodsController {
         if (result != null) {
             return result;
         }
-        String img="";
-        for (String s : goods.getImgList()) {
-            img=img+s+",";
+        if (!goods.getImgList().isEmpty()){
+            String img="";
+            for (String s : goods.getImgList()) {
+                img=img+s+",";
+            }
+            goods.setImg(img);
         }
-        goods.setImg(img);
         return goodsService.save(goods)?Result.success("添加商品成功"):Result.fail("添加商品失败");
     }
 
@@ -147,6 +156,9 @@ public class GoodsController {
         if (StrUtil.isBlank(goods.getCategoryId())){
             return Result.fail("商品分类不能为空");
         }
+        if (goods.getInventory()<=0){
+            return Result.fail("商品库存不能为空");
+        }
         if (goods.getOriginalPrice()<0){
             return Result.fail("商品原价输入错误");
         }
@@ -156,6 +168,7 @@ public class GoodsController {
         if (StrUtil.isBlank(goods.getImg())&&ObjectUtil.isEmpty(goods.getImgList())){
             return Result.fail("商品展示图至少一张");
         }
+
         return null;
     }
 

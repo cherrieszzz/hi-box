@@ -10,5 +10,7 @@ import com.itheima.entity.Address;
  * @since 2023-05-05 14:35:23
  */
 public interface AddressService extends IService<Address> {
+    boolean updateFlag(Long id, Long userId);
+
 }
 
