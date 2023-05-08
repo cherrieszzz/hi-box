@@ -119,6 +119,9 @@ public class UserController {
         }
         // 保存用户信息
         userService.save(user);
+        if (user.getFlag()==null){
+            user.setFlag(0);
+        }
         // 分配角色身份
         if (!userService.setRoleName(user.getFlag(),user.getId())){
             return Result.fail("分配角色失败");
@@ -130,6 +133,7 @@ public class UserController {
         // 默认账号
         String StrPrefix="hi-box_";
         String account=StrPrefix+RandomUtil.randomString(8);
+        user.setAccount(account);
         // 默认密码 88888888
         String password = PasswordEncoder.encode("88888888");
         // 密码加密
@@ -169,12 +173,16 @@ public class UserController {
         if (one==null){
             return Result.fail("用户不存在");
         }
+        if (!Objects.equals(user.getFlag(), one.getFlag())){
+            return Result.fail("该账号无权访问");
+        }
         if (!PasswordEncoder.matches(one.getPassword(), user.getPassword())){
             return Result.fail("用户名或密码不正确");
         }
         if (one.getStatus()==0){
             return Result.success("该账号冻结，请联系管理员");
         }
+
         return Result.success(one,"登录成功");
     }
 
@@ -205,6 +213,9 @@ public class UserController {
         }
         // 保存用户信息
         userService.save(user);
+        if (user.getFlag()==null){
+            user.setFlag(0);
+        }
         // 分配角色身份
         if (!userService.setRoleName(user.getFlag(),user.getId())){
             return Result.fail("分配角色失败");
@@ -241,12 +252,15 @@ public class UserController {
         String id = String.valueOf(map.get("id"));
         User byId = userService.getById(id);
         String oldPassword = (String) map.get("oldPassword");
-        String newPassword = PasswordEncoder.encode((String) map.get("newPassword"));
+        String newPassword = (String) map.get("newPassword");
         if (!PasswordEncoder.matches(byId.getPassword(),oldPassword)){
             return Result.fail("原密码错误，请重新输入");
         }
+        if (PasswordEncoder.matches(byId.getPassword(),newPassword)){
+            return Result.fail("两次密码不能一样");
+        }
         User user = new User();
-        user.setPassword(newPassword);
+        user.setPassword(PasswordEncoder.encode(newPassword));
         user.setId(Long.valueOf(id));
         if (userService.updateById(user)){
             return Result.success("修改密码成功");
