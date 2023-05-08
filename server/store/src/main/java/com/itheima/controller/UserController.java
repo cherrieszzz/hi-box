@@ -2,12 +2,14 @@ package com.itheima.controller;
 
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.dto.UserDto;
 import com.itheima.entity.Role;
 import com.itheima.entity.User;
+import com.itheima.exception.BusinessException;
 import com.itheima.service.UserService;
 import com.itheima.entity.Result;
 
@@ -15,12 +17,16 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.itheima.util.PasswordEncoder;
+import com.itheima.util.QiniuUtils;
 import com.itheima.util.RegexUtils;
 import com.itheima.util.Urls;
 import io.swagger.annotations.Api;
@@ -30,6 +36,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * 用户信息(User)表控制层
  *
@@ -47,6 +55,23 @@ public class UserController {
      */
     @Resource
     private UserService userService;
+    @ApiOperation(notes = "头像上传接口",value = "用户头像上传接口")
+    @PostMapping(Urls.user.upload)
+    Result Upload(@RequestBody MultipartFile imgFile) {
+        //文件全名  eg：7d104dd7-15cd-42c5-9a85-b60ea6f423c2.jpg
+        String originalFilename = imgFile.getOriginalFilename();
+        //获取后缀
+        String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
+        //随机文件名 + 后缀
+        String fileName = UUID.randomUUID().toString() + suffix;
+        //七牛云工具类 字节上传
+        try {
+            QiniuUtils.upload2Qiniu(imgFile.getBytes(), fileName);
+            return Result.success(fileName, "上传成功");
+        } catch (IOException e) {
+            throw new BusinessException("上传失败");
+        }
+    }
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum",value = "起始页",dataType = "Integer"),
@@ -104,13 +129,15 @@ public class UserController {
 
     private Result getResult(User user) {
         // 默认账号
-        String account="hg_"+RandomUtil.randomString(8);
-        if (StrUtil.isBlank(user.getPassword())){
-            // 默认密码 88888888
-            user.setPassword(PasswordEncoder.encode("88888888"));
-        }
+        String StrPrefix="hi-box_";
+        String account=StrPrefix+RandomUtil.randomString(8);
+        // 默认密码 88888888
+        String password = PasswordEncoder.encode("88888888");
         // 密码加密
-        user.setPassword(PasswordEncoder.encode(user.getPassword()));
+        if (!StrUtil.isBlank(user.getPassword())){
+            password=PasswordEncoder.encode(user.getPassword());
+        }
+        user.setPassword(password);
         if (StrUtil.isBlank(user.getUsername())){
             // 默认昵称 指定账号
             user.setUsername(account);
@@ -121,13 +148,10 @@ public class UserController {
         if (RegexUtils.isPhoneInvalid(user.getPhone())){
             return Result.fail("手机号不正确");
         }
-        if (user.getSex()==null){
-            return Result.fail("请选择正确的性别");
-        }
         LambdaUpdateWrapper<User> lqw = new LambdaUpdateWrapper<>();
         lqw.eq(User::getPhone, user.getPhone());
-        User one = userService.getOne(lqw);
-        if (one!=null){
+        List<User> one = userService.list(lqw);
+        if (!one.isEmpty()){
             return Result.fail("手机号重复,请重新输入");
         }
         return null;
@@ -199,9 +223,37 @@ public class UserController {
     @ApiImplicitParam(name = "User",dataType = "User",value = "修改接口")
     @PutMapping(Urls.user.update)
     public Result update(@RequestBody User user) {
+        // 更新图片先删除图片
+        String img = userService.getById(user.getId()).getAvatar();
+        if (!img.equals(user.getAvatar())){
+            QiniuUtils.deleteFileFromQiniu(img);
+        }
         return userService.updateById(user)?Result.success("修改成功"):Result.fail("修改失败");
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id",value = "用户id",dataType = "String"),
+            @ApiImplicitParam(name = "oldPassword",value = "原密码",dataType = "String"),
+            @ApiImplicitParam(name = "newPassword",value = "新密码",dataType = "String")
+    })
+    @ApiOperation(notes = "修改密码接口",value = "修改密码接口")
+    @PostMapping(Urls.user.updatePassword)
+    Result updatePassword(@RequestBody Map map){
+        String id = String.valueOf(map.get("id"));
+        User byId = userService.getById(id);
+        String oldPassword = (String) map.get("oldPassword");
+        String newPassword = PasswordEncoder.encode((String) map.get("newPassword"));
+        if (!PasswordEncoder.matches(byId.getPassword(),oldPassword)){
+            return Result.fail("原密码错误，请重新输入");
+        }
+        User user = new User();
+        user.setPassword(newPassword);
+        user.setId(Long.valueOf(id));
+        if (userService.updateById(user)){
+            return Result.success("修改密码成功");
+        }
+        return Result.fail("修改密码失败");
+    }
     /**
      * 删除数据
      *
@@ -210,8 +262,12 @@ public class UserController {
      */
     @ApiOperation(value = "删除接口",notes = "可批量删除")
     @ApiImplicitParam(name = "idList",dataType = "List<String>",value = "可批量删除")
-    @DeleteMapping
+    @DeleteMapping(Urls.user.delete)
     public Result delete(@RequestParam("idList") List<String> idList) {
+        // 删除图片
+        List<String> collect = userService.listByIds(idList).stream().map(User::getAvatar).filter(StrUtil::isNotBlank).collect(Collectors.toList());
+        collect.stream().forEach(QiniuUtils::deleteFileFromQiniu);
+        // 删除用户身份
         return userService.removeBatchByIds(idList)&&userService.deleteUserRole(idList)?Result.success("删除成功"):Result.fail("删除失败");
     }
 }

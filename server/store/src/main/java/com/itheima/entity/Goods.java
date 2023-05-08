@@ -80,11 +80,6 @@ public class Goods implements Serializable {
     @ApiModelProperty(value = "状态：1：上架 0：下架")
     private Integer status;
 
-    /**
-     * 逻辑删除 1：正常 0：删除
-     */
-    @ApiModelProperty(value = "逻辑删除 1：正常 0：删除")
-    private Integer deleteFlag;
 
     /**
      * 创建时间
@@ -98,17 +93,6 @@ public class Goods implements Serializable {
     @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
-    /**
-     * 创建人
-     */
-    @ApiModelProperty(value = "创建人")
-    private String createUser;
-
-    /**
-     * 修改人
-     */
-    @ApiModelProperty(value = "修改人")
-    private String updateUser;
 
 }
 

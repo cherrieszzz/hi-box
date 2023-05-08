@@ -1,6 +1,7 @@
 package com.itheima.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itheima.dto.CommentDto;
 import com.itheima.entity.Comment;
 
 /**
@@ -10,5 +11,6 @@ import com.itheima.entity.Comment;
  * @since 2023-05-05 14:35:23
  */
 public interface CommentService extends IService<Comment> {
+    boolean setComment(CommentDto commentDto);
 }
 
