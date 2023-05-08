@@ -3,6 +3,7 @@ package com.itheima.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.entity.Address;
 import com.itheima.service.AddressService;
@@ -12,6 +13,7 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
+import com.itheima.service.UserService;
 import com.itheima.util.RegexUtils;
 import com.itheima.util.Urls;
 import io.swagger.annotations.Api;
@@ -20,6 +22,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import static com.itheima.util.Urls.address.updateFlag;
 
 /**
  * 收货地址(Address)表控制层
@@ -37,6 +41,12 @@ public class AddressController {
      */
     @Resource
     private AddressService addressService;
+    @Resource
+    private UserService userService;
+    @GetMapping(updateFlag)
+    public boolean updateFlag(Long id,Long userId){
+       return addressService.updateFlag(id,userId);
+    }
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum",value = "起始页数",dataType = "Long"),
             @ApiImplicitParam(name = "pageSize",value = "每页页数",dataType = "Long"),
@@ -59,12 +69,24 @@ public class AddressController {
     /**
      * 通过主键查询单条数据
      *
-     * @param id 主键
+     * @param userId 主键
      * @return 单条数据
      */
-    @GetMapping("{id}")
-    public Result selectOne(@PathVariable Serializable id) {
-        return Result.success("功能未开发");
+    @GetMapping(Urls.address.getUserById)
+    public Result selectOne(String userId) {
+        LambdaUpdateWrapper<Address> lqw = new LambdaUpdateWrapper<>();
+        lqw.eq(Address::getUserId,userId).orderByDesc(Address::getFlag).orderByDesc(Address::getUpdateTime);
+        // 该用户地址只有一个默认为默认地址
+        List<Address> list = addressService.list(lqw);
+        if (list.isEmpty()){
+            return Result.fail("此用户暂无收获地址");
+        }
+        if (list.size()==1&&list.get(0).getFlag()==0){
+            Address address = list.get(0);
+            address.setFlag(1);
+            addressService.updateById(address);
+        }
+        return Result.success(list,"查询用户地址成功");
     }
 
     /**
@@ -81,7 +103,16 @@ public class AddressController {
         if (result != null) {
             return result;
         }
-        return addressService.save(address)?Result.success("新增成功"):Result.fail("新增失败");
+        if (!addressService.save(address)){
+            return Result.fail("新增失败");
+        }
+        if (address.getFlag()==null){
+            address.setFlag(0);
+        }
+        if (address.getFlag()==1){
+            addressService.updateFlag(address.getId(), address.getUserId());
+        }
+        return Result.success("新增成功");
     }
 
     private static Result getResult(Address address) {
@@ -91,7 +122,7 @@ public class AddressController {
         if (StrUtil.isBlank(address.getPhone())){
             return Result.fail("手机号不能为空");
         }
-        if (!RegexUtils.isPhoneInvalid(address.getPhone())){
+        if (RegexUtils.isPhoneInvalid(address.getPhone())){
             return Result.fail("手机号格式不正确");
         }
         if (StrUtil.isBlank(address.getConsignee())){
@@ -113,6 +144,12 @@ public class AddressController {
         Result result = getResult(address);
         if (result != null) {
             return result;
+        }
+        if (address.getFlag()==null){
+            address.setFlag(0);
+        }
+        if (address.getFlag()==1){
+            addressService.updateFlag(address.getId(), address.getUserId());
         }
         return addressService.updateById(address)?Result.success("修改成功"): Result.fail("修改失败");
     }

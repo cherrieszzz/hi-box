@@ -26,6 +26,16 @@ public class Urls {
      public class address{
          final static public String baseUrl="/address";
         /**
+         * 修改用户默认地址
+         */
+        final static public String updateFlag="/updateFlag";
+
+        /**
+         * 获取用户地址
+         */
+        final static public String getUserById="/getUserById";
+
+        /**
          * 分页显示
          */
         final static public String getPageList="/getPageList";

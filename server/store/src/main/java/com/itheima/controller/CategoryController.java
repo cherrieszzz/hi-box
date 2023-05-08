@@ -1,10 +1,13 @@
 package com.itheima.controller;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.entity.Category;
+import com.itheima.exception.BusinessException;
 import com.itheima.service.CategoryService;
 import com.itheima.entity.Result;
 
@@ -44,6 +47,9 @@ public class CategoryController {
         LambdaQueryWrapper<Category> lqw = new LambdaQueryWrapper<>();
         lqw.orderByAsc(Category::getCreateTime).orderByDesc(Category::getUpdateTime).orderByAsc(Category::getSort);
         List<Category> list = categoryService.list();
+        if (ObjectUtil.isEmpty(list)){
+            return Result.fail("暂无此信息");
+        }
         return Result.success(list,"获取分类成功");
     }
     @ApiImplicitParams({
@@ -61,7 +67,6 @@ public class CategoryController {
                 .orderByDesc(Category::getUpdateTime)
                 .orderByAsc(Category::getCreateTime);
         Page<Category> page = categoryService.page(categoryPage, lqw);
-
         return page!=null?Result.success(page,"查询分类成功"): Result.fail("查无此人");
     }
     /**
@@ -88,7 +93,14 @@ public class CategoryController {
         if (StrUtil.isBlank(category.getName())){
             return Result.fail("分类名不能为空");
         }
-        return categoryService.save(category)?Result.success("分类新增成功"):Result.fail("分类新增失败");
+        LambdaUpdateWrapper<Category> lqw = new LambdaUpdateWrapper<>();
+        lqw.eq(Category::getName,category.getName());
+        if (!ObjectUtil.isEmpty(categoryService.list(lqw))){
+            return Result.fail("该分类已存在:"+category.getName());
+        }
+
+
+        return categoryService.save(category)?Result.success("分类新增成功"):Result.fail("未知错误");
     }
 
     /**
@@ -115,8 +127,8 @@ public class CategoryController {
      */
     @ApiOperation(value = "删除接口",notes = "可批量删除")
     @ApiImplicitParam(name = "idList",value = "删除分类接口",dataType = "List<String>")
-    @DeleteMapping
-    public Result delete(@RequestParam("idList") List<String> idList) {
+    @DeleteMapping(Urls.category.delete)
+    public Result delete(@RequestBody List<Long> idList) {
         return categoryService.removeBatchByIds(idList)? Result.success("删除成功"): Result.fail("删除失败");
     }
 }
