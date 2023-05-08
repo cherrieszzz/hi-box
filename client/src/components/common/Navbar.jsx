@@ -4,10 +4,9 @@ import nav_logo from '../../assets/logo.png'
 
 export default function Navbar() {
     return (
-        <div className='flex justify-between py-3 px-10'>
+        <div className='flex justify-between items-center py-3 px-10 border-b-2 fixed top-0 w-full bg-gray-50'>
             <div className='flex items-center space-x-3'>
-                {/* <svg class="icon" aria-hidden="true"> <use xlinkHref="#icon-React"></use> </svg> */}
-                <img src={nav_logo} alt='logo' className='w-10 h-10' />
+                <Link to={'/'} className='w-20 h-10'><img src={nav_logo} alt='logo' className='w-10 h-10' /></Link>
                 <svg className='w-7 h-7' aria-hidden="true"> <use xlinkHref="#icon-ic_search24px"></use> </svg>
                 <input type='text' className='w-full border-2 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50'></input>
             </div>
