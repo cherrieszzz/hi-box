@@ -4,9 +4,9 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    username: user
-    password: 123456789
-    url: jdbc:mysql://43.207.180.13/store?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: 43.207.180.13
@@ -18,9 +18,11 @@ spring:
         min-idle: 1     #最小等待连接中的数量
         #定时任务，检查连接池中的连接是否满足至少有 min-idle 的个数，同时，不超过 max-idle 那么多个数
         time-between-eviction-runs: 10s
+  config:
+    import: optional:file:.env[.properties]
 
 server:
-  port: 80
+  port: ${PORT}
 mybatis-plus:
   configuration:
     #日志

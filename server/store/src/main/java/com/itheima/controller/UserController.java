@@ -76,12 +76,11 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum",value = "起始页",dataType = "Integer"),
             @ApiImplicitParam(name = "pageSize",value = "每页显示页数",dataType = "Integer"),
-            @ApiImplicitParam(name = "search",value = "查询条件 phone/username/account",dataType = "String"),
-            @ApiImplicitParam(name = "flag",value = "身份标记 ",dataType = "Integer"),
+            @ApiImplicitParam(name = "search",value = "查询条件 phone/username/account",dataType = "String")
     })
     @ApiOperation(value = "用户信息显示接口")
     @GetMapping(Urls.user.PersonList)
-    public Result PersonList(Integer pageNum,Integer pageSize,String search,Integer flag){
+    public Result PersonList(Integer pageNum,Integer pageSize,String search){
         Page<User> userPage = new Page<User>(pageNum,pageSize);
         LambdaUpdateWrapper<User> lqw = new LambdaUpdateWrapper<>();
         lqw.like(StrUtil.isNotBlank(search),User::getUsername,search).or()
@@ -99,8 +98,8 @@ public class UserController {
         records.stream().forEach(item -> {
             UserDto userDto = new UserDto();
             BeanUtil.copyProperties(item, userDto);
-            if (Objects.equals(flag, item.getFlag())){
-                userDto.setRoleName(userService.getRoleName(flag));
+            if (item.getFlag()==0){
+                userDto.setRoleName(userService.getRoleName(0));
                 userDtos.add(userDto);
             }
         });
