@@ -173,16 +173,17 @@ public class UserController {
         if (one==null){
             return Result.fail("用户不存在");
         }
-        if (!Objects.equals(user.getFlag(), one.getFlag())){
-            return Result.fail("该账号无权访问");
-        }
         if (!PasswordEncoder.matches(one.getPassword(), user.getPassword())){
             return Result.fail("用户名或密码不正确");
         }
         if (one.getStatus()==0){
             return Result.success("该账号冻结，请联系管理员");
         }
-
+        if (user.getFlag()!=null){
+            if (!Objects.equals(user.getFlag(), one.getFlag())){
+                return Result.fail("该账号无权访问");
+            }
+        }
         return Result.success(one,"登录成功");
     }
 
