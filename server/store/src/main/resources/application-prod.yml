@@ -4,9 +4,9 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    username: ${datasource.username}
-    password: ${datasource.password}
-    url: ${datasource.url}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: 43.207.180.13
@@ -22,7 +22,7 @@ spring:
     import: optional:file:.env[.properties]
 
 server:
-  port: ${port}
+  port: ${PORT}
 mybatis-plus:
   configuration:
     #日志
