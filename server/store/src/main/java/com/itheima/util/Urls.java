@@ -150,6 +150,22 @@ public class Urls {
      **/
     public class orders{
         final static public String baseUrl="/orders";
+        /**
+         * 下单
+         */
+        final static public String save="/save";
+        /**
+         * 查询订单
+         */
+        final static public String getPageList="/getPageList";
+        /**
+         * 修改订单数据
+         */
+        final static public String update="/update";
+        /**
+         * 删除订单--物理删除
+         */
+        final static public String delete="/delete";
     }
     /**
      * @Author WangFK

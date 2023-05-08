@@ -1,6 +1,8 @@
 package com.itheima.controller;
 
 
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.RandomUtil;
 import com.itheima.entity.Orders;
 import com.itheima.service.OrdersService;
 import com.itheima.entity.Result;
@@ -46,8 +48,23 @@ public class OrdersController {
      * @param orders 实体对象
      * @return 新增结果
      */
-    @PostMapping
+    @PostMapping(Urls.orders.save)
     public Result insert(@RequestBody Orders orders) {
+        // 订单状态：目前暂无支付接口 默认 待付款状态
+        orders.setStatus(1);
+        // 生成订单号
+        orders.setNumber(RandomUtil.randomString(32));
+        // 支付方式
+        orders.setPayMethod(1);
+        // 支付状态
+        switch (orders.getStatus()){
+            case 1:orders.setPayStatus(0);break;
+            case 6:orders.setPayStatus(2);break;
+            case 7:orders.setPayStatus(2);break;
+            default:orders.setPayStatus(1);
+        }
+
+
         return Result.success("功能未开发");
     }
 
@@ -57,7 +74,7 @@ public class OrdersController {
      * @param orders 实体对象
      * @return 修改结果
      */
-    @PutMapping
+    @PutMapping(Urls.orders.update)
     public Result update(@RequestBody Orders orders) {
         return Result.success("功能未开发");
     }
