@@ -151,6 +151,14 @@ public class Urls {
     public class orders{
         final static public String baseUrl="/orders";
         /**
+         * 加载用户购物车
+         */
+        final static public String getCartByUserId="/getCartByUserId";
+        /**
+         * 清空购物车
+         */
+        final static public String deleteCart="/deleteCart";
+        /**
          * 下单 单个商品购买下单
          */
         final static public String save="/save";
