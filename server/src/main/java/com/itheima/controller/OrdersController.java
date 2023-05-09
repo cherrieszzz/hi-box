@@ -10,12 +10,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.dto.OrdersDto;
 import com.itheima.dto.ShoppingCartDto;
 import com.itheima.entity.*;
+import com.itheima.exception.BusinessException;
 import com.itheima.service.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.itheima.util.Urls;
 import lombok.extern.slf4j.Slf4j;
@@ -124,6 +126,7 @@ public class OrdersController {
      * @param orders 实体对象
      * @return 新增结果
      */
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping(Urls.orders.save)
     public Result insert(@RequestBody Orders orders) {
         // 订单状态：目前暂无支付接口 默认 待付款状态
@@ -203,12 +206,27 @@ public class OrdersController {
 
     /**
      * 购物车下单->
-     * @param orders
+     * @param ordersList
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping(Urls.orders.orderCart)
-    public Result orderCart(@RequestBody Orders orders ){
-        return Result.success("功能未开发");
+    public Result orderCart(@RequestBody List<Orders> ordersList ){
+        ordersList.stream().forEach(item->{
+            Result result = insert(item);
+            if (result.getCode()==400){
+                throw new BusinessException(result.getMsg());
+            }
+        });
+        List<Long> userIdList = ordersList.stream().map(Orders::getUserId).distinct().collect(Collectors.toList());
+        if (userIdList.isEmpty()){
+            throw new BusinessException("用户信息为空");
+        }
+        if (userIdList.size()>1){
+            throw new BusinessException("不存在多个用户情况,只能单用户");
+        }
+        //清空购物车
+        return deleteCart(userIdList.get(0)).getCode()==200?Result.success("下单成功"):Result.fail("下单失败");
     }
 
 

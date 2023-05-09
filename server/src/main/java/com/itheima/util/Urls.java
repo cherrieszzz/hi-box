@@ -151,6 +151,10 @@ public class Urls {
     public class orders{
         final static public String baseUrl="/orders";
         /**
+         * 修改购物车数据->包括 商品数量  频繁修改购物车商品信息
+         */
+        final static public String updateCart="/updateCart";
+        /**
          * 加载用户购物车
          */
         final static public String getCartByUserId="/getCartByUserId";
