@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 订单表(Orders)表实体类
  *
  * @author WangFK
- * @since 2023-05-05 14:35:23
+ * @since 2023-05-09 09:42:00
  */
 @Data
 @NoArgsConstructor
@@ -30,6 +30,7 @@ public class Orders implements Serializable {
      * 主键
      */
     @ApiModelProperty(value = "主键")
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -49,6 +50,12 @@ public class Orders implements Serializable {
      */
     @ApiModelProperty(value = "下单用户")
     private Long userId;
+
+    /**
+     * 商品id
+     */
+    @ApiModelProperty(value = "商品id")
+    private Long goodsId;
 
     /**
      * 地址id
@@ -79,6 +86,12 @@ public class Orders implements Serializable {
      */
     @ApiModelProperty(value = "支付状态 0未支付 1已支付 2退款")
     private Integer payStatus;
+
+    /**
+     * 商品数量
+     */
+    @ApiModelProperty(value = "商品数量")
+    private Long count;
 
     /**
      * 实收金额
