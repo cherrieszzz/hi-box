@@ -1,21 +1,25 @@
 package com.itheima.controller;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.dto.OrdersDto;
+import com.itheima.dto.ShoppingCartDto;
 import com.itheima.entity.*;
 import com.itheima.service.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.itheima.util.Urls;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +46,42 @@ public class OrdersController {
     private GoodsService goodsService;
     @Resource
     private OrderDetailService orderDetailService;
+    @Resource
+    private ShoppingCartService shoppingCartService;
 
+    /**
+     * 加载用户购物车信息
+     * @param userId
+     * @return
+     */
+    @GetMapping(Urls.orders.getCartByUserId)
+    public Result getCartByUserId(Long userId){
+        LambdaUpdateWrapper<ShoppingCart> lqw = new LambdaUpdateWrapper<>();
+        lqw.eq(ShoppingCart::getUserId,userId);
+        List<ShoppingCart> shoppingCartList = shoppingCartService.list(lqw);
+        List<ShoppingCartDto> shoppingCartDtos = new ArrayList<>();
+        shoppingCartList.stream().forEach(item->{
+            ShoppingCartDto shoppingCartDto = new ShoppingCartDto();
+            BeanUtil.copyProperties(item,shoppingCartDto);
+            shoppingCartDto.setGoods(goodsService.getById(item.getGoodsId()));
+            shoppingCartDtos.add(shoppingCartDto);
+        });
+        if (shoppingCartDtos.isEmpty()){
+            return Result.fail("该用户暂无购物车信息");
+        }
+        return Result.success(shoppingCartDtos,"该用户购物车信息如下");
+    }
+    /**
+     * 清空购物车
+     * @param userId
+     * @return
+     */
+    @GetMapping(Urls.orders.deleteCart)
+    public Result deleteCart(Long userId){
+        LambdaUpdateWrapper<ShoppingCart> lqw = new LambdaUpdateWrapper<>();
+        lqw.eq(ShoppingCart::getUserId,userId);
+        return shoppingCartService.remove(lqw)? Result.success("清空购物车成功"): Result.fail("清空购物车失败");
+    }
     /**
      * 查询全部订单数据 查询条件有待商榷
      * @param pageNum
@@ -172,14 +211,28 @@ public class OrdersController {
         return Result.success("功能未开发");
     }
 
+
     /**
      * 加入购物车->
-     * @param shoppingCartList
+     * @param shoppingCart
      * @return
      */
     @PostMapping(Urls.orders.joinCart)
-    public Result joinCart(@RequestBody List<ShoppingCart> shoppingCartList ){
-        return Result.success("功能未开发");
+    public Result joinCart(@RequestBody ShoppingCart shoppingCart){
+        Goods byId = goodsService.getById(shoppingCart.getGoodsId());
+        if (byId==null){
+            return Result.fail("该商品不存在");
+        }
+        if (byId.getStatus()==0||byId.getInventory()<1){
+            return Result.fail("该商品已下架");
+        }
+        // 加入购物车默认数量为1
+        shoppingCart.setNumber(1);
+        shoppingCart.setAmount(byId.getSellingPrice());
+        if (!shoppingCartService.save(shoppingCart)){
+            return Result.fail("加入购物车失败");
+        }
+        return getCartByUserId(shoppingCart.getUserId());
     }
 
     /**
