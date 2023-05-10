@@ -14,7 +14,7 @@ export default function LoginPage() {
 
   if(loginError) return (
     <SignLayout>
-      <LoginTestError />
+     
     </SignLayout>
   )
 
