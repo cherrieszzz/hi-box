@@ -1,6 +1,8 @@
 package com.itheima.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ObjectUtil;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.itheima.util.Messages;
 import com.itheima.util.Urls;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -56,6 +59,7 @@ public class OrdersController {
      * @param userId
      * @return
      */
+    @SaCheckRole(value ={ Messages.Role.Role_User,Messages.Role.Role_Business},mode = SaMode.OR)
     @GetMapping(Urls.orders.getCartByUserId)
     public Result getCartByUserId(Long userId){
         LambdaUpdateWrapper<ShoppingCart> lqw = new LambdaUpdateWrapper<>();
@@ -78,6 +82,7 @@ public class OrdersController {
      * @param userId
      * @return
      */
+    @SaCheckRole(value ={ Messages.Role.Role_User,Messages.Role.Role_Business},mode = SaMode.OR)
     @GetMapping(Urls.orders.deleteCart)
     public Result deleteCart(Long userId){
         LambdaUpdateWrapper<ShoppingCart> lqw = new LambdaUpdateWrapper<>();
@@ -92,6 +97,7 @@ public class OrdersController {
      * @return
      */
     @GetMapping(Urls.orders.getPageList)
+    @SaCheckRole(value =Messages.Role.Role_Business)
     public Result getPageList(Long pageNum,Long pageSize,String search){
         Page<Orders> ordersPage = new Page<>(pageNum, pageSize);
         LambdaUpdateWrapper<Orders> lqw = new LambdaUpdateWrapper<>();
@@ -109,6 +115,7 @@ public class OrdersController {
      * @param userId 主键
      * @return 单条数据
      */
+    @SaCheckRole(value ={ Messages.Role.Role_User,Messages.Role.Role_Business},mode = SaMode.OR)
     @GetMapping(Urls.orders.orderByUserId)
     public Result selectOne( String userId) {
         LambdaUpdateWrapper<Orders> lqw = new LambdaUpdateWrapper<>();
@@ -126,6 +133,7 @@ public class OrdersController {
      * @param orders 实体对象
      * @return 新增结果
      */
+    @SaCheckRole(value ={ Messages.Role.Role_User,Messages.Role.Role_Business},mode = SaMode.OR)
     @Transactional(rollbackFor = Exception.class)
     @PostMapping(Urls.orders.save)
     public Result insert(@RequestBody Orders orders) {
@@ -209,6 +217,7 @@ public class OrdersController {
      * @param ordersList
      * @return
      */
+    @SaCheckRole(value ={ Messages.Role.Role_User,Messages.Role.Role_Business},mode = SaMode.OR)
     @Transactional(rollbackFor = Exception.class)
     @PostMapping(Urls.orders.orderCart)
     public Result orderCart(@RequestBody List<Orders> ordersList ){
@@ -235,6 +244,7 @@ public class OrdersController {
      * @param shoppingCart
      * @return
      */
+    @SaCheckRole(value ={ Messages.Role.Role_User,Messages.Role.Role_Business},mode = SaMode.OR)
     @PostMapping(Urls.orders.joinCart)
     public Result joinCart(@RequestBody ShoppingCart shoppingCart){
         Goods byId = goodsService.getById(shoppingCart.getGoodsId());
@@ -259,6 +269,7 @@ public class OrdersController {
      * @param orders 实体对象
      * @return 修改结果
      */
+    @SaCheckRole(value ={ Messages.Role.Role_User,Messages.Role.Role_Business},mode = SaMode.OR)
     @PutMapping(Urls.orders.update)
     public Result update(@RequestBody Orders orders) {
         return Result.success("功能未开发");
@@ -271,10 +282,10 @@ public class OrdersController {
      * @return 删除结果
      */
     @DeleteMapping
+    @SaCheckRole(value =Messages.Role.Role_Business)
     public Result delete(@RequestParam("idList") List<Long> idList) {
         LambdaUpdateWrapper<OrderDetail> lqw = new LambdaUpdateWrapper<>();
         lqw.in(OrderDetail::getOrderId,idList);
-
         return orderDetailService.remove(lqw)&&ordersService.removeByIds(idList)?Result.success("订单删除成功"):Result.fail("订单删除失败");
     }
 }

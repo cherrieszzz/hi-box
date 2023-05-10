@@ -15,4 +15,5 @@ import java.util.List;
 @Data
 public class UserDto extends User {
         String roleName;
+        String token;
 }

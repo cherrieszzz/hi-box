@@ -12,5 +12,6 @@ import com.itheima.entity.Comment;
  */
 public interface CommentService extends IService<Comment> {
     boolean setComment(CommentDto commentDto);
+
 }
 
