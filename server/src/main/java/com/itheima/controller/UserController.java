@@ -1,6 +1,11 @@
 package com.itheima.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaIgnore;
+import cn.dev33.satoken.annotation.SaMode;
+import cn.dev33.satoken.session.SaSessionCustomUtil;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -25,10 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.itheima.util.PasswordEncoder;
-import com.itheima.util.QiniuUtils;
-import com.itheima.util.RegexUtils;
-import com.itheima.util.Urls;
+import com.itheima.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -55,6 +57,7 @@ public class UserController {
      */
     @Resource
     private UserService userService;
+    @SaIgnore
     @ApiOperation(notes = "头像上传接口",value = "用户头像上传接口")
     @PostMapping(Urls.user.upload)
     Result Upload(@RequestBody MultipartFile imgFile) {
@@ -79,6 +82,7 @@ public class UserController {
             @ApiImplicitParam(name = "search",value = "查询条件 phone/username/account",dataType = "String")
     })
     @ApiOperation(value = "用户信息显示接口")
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @GetMapping(Urls.user.PersonList)
     public Result PersonList(Integer pageNum,Integer pageSize,String search){
         Page<User> userPage = new Page<User>(pageNum,pageSize);
@@ -112,6 +116,7 @@ public class UserController {
     // 方法注释
     @ApiOperation(value = "注册接口 用户/商家")
     @PostMapping(Urls.user.registered)
+    @SaIgnore
     public Result UserRegistered(@RequestBody User user){
         Result result = getResult(user);
         if (result!=null){
@@ -163,8 +168,9 @@ public class UserController {
     // 方法注释
     @ApiOperation(value = "登录接口",notes = "手机号/账号/用户名登录")
     @ApiImplicitParam(name = "User",dataType = "User",value = "登录接口")
+    @SaIgnore
     @PostMapping(Urls.user.login)
-    Result login(@RequestBody User user){
+    public Result login(@RequestBody User user){
         LambdaUpdateWrapper<User> lqw = new LambdaUpdateWrapper<>();
         lqw.eq(StrUtil.isNotBlank(user.getAccount()),User::getAccount,user.getAccount()).or()
                 .eq(StrUtil.isNotBlank(user.getPhone()),User::getPhone,user.getPhone()).or()
@@ -184,7 +190,17 @@ public class UserController {
                 return Result.fail("该账号无权访问");
             }
         }
-        return Result.success(one,"登录成功");
+        UserDto userDto = new UserDto();
+        BeanUtil.copyProperties(one,userDto);
+        StpUtil.login(one.getId());
+        if (one.getFlag()==0){
+            userDto.setRoleName(Messages.Role.Role_User);
+        }
+        userDto.setRoleName(Messages.Role.Role_Business);
+        userDto.setToken(StpUtil.getTokenInfo().tokenValue);
+        // 在登录时缓存user对象
+        StpUtil.getSession().set("user", userDto);
+        return Result.success(userDto,"登录成功");
     }
 
     /**
@@ -206,6 +222,7 @@ public class UserController {
      */
     @ApiImplicitParam(name = "新增接口",dataType = "User")
     @ApiOperation(value = "新增 和注册思路一样")
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @PostMapping(Urls.user.save)
     public Result insert(@RequestBody User user) {
         Result result = getResult(user);
@@ -230,6 +247,7 @@ public class UserController {
      * @param user 实体对象
      * @return 修改结果
      */
+    @SaCheckRole(value = {Messages.Role.Role_Business,Messages.Role.Role_User},mode = SaMode.OR)
     @ApiOperation(value = "修改接口",notes = "修改用户/管理员信息")
     @ApiImplicitParam(name = "User",dataType = "User",value = "修改接口")
     @PutMapping(Urls.user.update)
@@ -248,6 +266,7 @@ public class UserController {
             @ApiImplicitParam(name = "newPassword",value = "新密码",dataType = "String")
     })
     @ApiOperation(notes = "修改密码接口",value = "修改密码接口")
+    @SaCheckRole(value = {Messages.Role.Role_Business,Messages.Role.Role_User},mode = SaMode.OR)
     @PostMapping(Urls.user.updatePassword)
     Result updatePassword(@RequestBody Map map){
         String id = String.valueOf(map.get("id"));
@@ -264,7 +283,9 @@ public class UserController {
         user.setPassword(PasswordEncoder.encode(newPassword));
         user.setId(Long.valueOf(id));
         if (userService.updateById(user)){
-            return Result.success("修改密码成功");
+            StpUtil.kickout(user.getId());
+            SaSessionCustomUtil.deleteSessionById(String.valueOf(user.getId()));
+            return Result.success("修改密码成功,请重新登录");
         }
         return Result.fail("修改密码失败");
     }
@@ -274,8 +295,10 @@ public class UserController {
      * @param idList 主键结合
      * @return 删除结果
      */
+
     @ApiOperation(value = "删除接口",notes = "可批量删除")
     @ApiImplicitParam(name = "idList",dataType = "List<String>",value = "可批量删除")
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @DeleteMapping(Urls.user.delete)
     public Result delete(@RequestParam("idList") List<String> idList) {
         // 删除图片
