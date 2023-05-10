@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import AdminLayout from "../layouts/AdminLayout";
 
-function AdminPage () {
+export default function AdminPage () {
     return (
-        <div>
-            
-        </div>
+        <AdminLayout>
+
+        </AdminLayout>
     )
 }

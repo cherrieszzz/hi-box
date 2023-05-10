@@ -1,6 +1,9 @@
 package com.itheima.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaIgnore;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ObjectUtil;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.itheima.service.SetmealService;
+import com.itheima.util.Messages;
 import com.itheima.util.QiniuUtils;
 import com.itheima.util.Urls;
 import io.swagger.models.auth.In;
@@ -55,6 +59,7 @@ public class GoodsController {
     private SetmealService setmealService;
 
     @PostMapping(Urls.goods.upload)
+    @SaIgnore
     Result Upload(@RequestBody MultipartFile imgFile) {
         //文件全名  eg：7d104dd7-15cd-42c5-9a85-b60ea6f423c2.jpg
         String originalFilename = imgFile.getOriginalFilename();
@@ -75,6 +80,7 @@ public class GoodsController {
         return commentService.setComment(commentDto)?Result.success("设置评论成功"):Result.fail("设置评论失败");
     }
 
+    @SaCheckRole(value =Messages.Role.Role_Business)
     @GetMapping(Urls.goods.updateStatus)
     public Result updateStatus( Long id){
         Goods one = goodsService.getById(id);
@@ -86,6 +92,7 @@ public class GoodsController {
         return goodsService.updateById(one)? Result.success("修改状态成功"): Result.fail("修改状态失败");
     }
     @GetMapping(Urls.goods.getPageList)
+    @SaCheckRole(value =Messages.Role.Role_Business)
     public Result getPageList(Long pageNum,Long pageSize,String name,String status,String categoryId){
         Page<Goods> goodsPage = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Goods> lqw = new LambdaQueryWrapper<>();
@@ -133,6 +140,7 @@ public class GoodsController {
      * @param goods 实体对象
      * @return 新增结果
      */
+    @SaCheckRole(value =Messages.Role.Role_Business)
     @PostMapping(Urls.goods.save)
     public Result insert(@RequestBody GoodsDto goods) {
         Result result = getResult(goods);
@@ -178,6 +186,7 @@ public class GoodsController {
      * @param goods 实体对象
      * @return 修改结果
      */
+    @SaCheckRole(value =Messages.Role.Role_Business)
     @PutMapping(Urls.goods.update)
     public Result update(@RequestBody GoodsDto goods) {
         Result result = getResult(goods);
@@ -193,6 +202,7 @@ public class GoodsController {
      * @param idList 主键结合
      * @return 删除结果
      */
+    @SaCheckRole(value =Messages.Role.Role_Business)
     @DeleteMapping(Urls.goods.delete)
     public Result delete(@RequestParam("idList") List<String> idList) {
         // 删除图片

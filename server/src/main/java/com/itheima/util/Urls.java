@@ -151,9 +151,29 @@ public class Urls {
     public class orders{
         final static public String baseUrl="/orders";
         /**
-         * 下单
+         * 修改购物车数据->包括 商品数量  频繁修改购物车商品信息
+         */
+        final static public String updateCart="/updateCart";
+        /**
+         * 加载用户购物车
+         */
+        final static public String getCartByUserId="/getCartByUserId";
+        /**
+         * 清空购物车
+         */
+        final static public String deleteCart="/deleteCart";
+        /**
+         * 下单 单个商品购买下单
          */
         final static public String save="/save";
+        /**
+         * 加入购物车 返回->保存,下单->清空购物车
+         */
+        final static public String joinCart="/joinCart";
+        /**
+         * 购物车下单
+         */
+        final static public String orderCart="/orderCart";
         /**
          * 查询订单
          */
@@ -166,6 +186,10 @@ public class Urls {
          * 删除订单--物理删除
          */
         final static public String delete="/delete";
+        /**
+         * 查询某一用户订单数据
+         */
+        final static public  String orderByUserId="/orderByUserId";
     }
     /**
      * @Author WangFK

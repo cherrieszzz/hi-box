@@ -28,5 +28,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         return flag&&commentMapper.setComment(commentDto.getGoodsId(),commentDto.getId());
     }
+
+
 }
 

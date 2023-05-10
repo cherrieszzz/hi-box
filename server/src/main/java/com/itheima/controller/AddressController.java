@@ -1,6 +1,8 @@
 package com.itheima.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -14,6 +16,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.itheima.service.UserService;
+import com.itheima.util.Messages;
 import com.itheima.util.RegexUtils;
 import com.itheima.util.Urls;
 import io.swagger.annotations.Api;
@@ -44,6 +47,7 @@ public class AddressController {
     @Resource
     private UserService userService;
     @GetMapping(updateFlag)
+    @SaCheckRole(value = Messages.Role.Role_Business)
     public boolean updateFlag(Long id,Long userId){
        return addressService.updateFlag(id,userId);
     }
@@ -73,6 +77,7 @@ public class AddressController {
      * @return 单条数据
      */
     @GetMapping(Urls.address.getUserById)
+    @SaCheckRole(value = {Messages.Role.Role_Business,Messages.Role.Role_User},mode = SaMode.OR)
     public Result selectOne(String userId) {
         LambdaUpdateWrapper<Address> lqw = new LambdaUpdateWrapper<>();
         lqw.eq(Address::getUserId,userId).orderByDesc(Address::getFlag).orderByDesc(Address::getUpdateTime);
@@ -97,6 +102,7 @@ public class AddressController {
      */
     @ApiImplicitParam(value = "新增接口",dataType = "Address")
     @ApiOperation(notes = "新增地址接口",value = "新增地址接口")
+    @SaCheckRole(value = {Messages.Role.Role_Business,Messages.Role.Role_User},mode = SaMode.OR)
     @PostMapping(Urls.address.save)
     public Result insert(@RequestBody Address address) {
         Result result = getResult(address);
@@ -140,6 +146,7 @@ public class AddressController {
     @ApiOperation(notes = "修改接口",value = "修改接口")
     @ApiImplicitParam(name = "Address",dataType = "Address",value = "修改信息接口")
     @PutMapping(Urls.address.update)
+    @SaCheckRole(value = {Messages.Role.Role_Business,Messages.Role.Role_User},mode = SaMode.OR)
     public Result update(@RequestBody Address address) {
         Result result = getResult(address);
         if (result != null) {
@@ -163,6 +170,7 @@ public class AddressController {
     @ApiImplicitParam(name = "idList",dataType = "List<String>",value = "删除ID集合")
     @ApiOperation(notes = "删除接口 ",value = "可批量删除")
     @DeleteMapping(Urls.address.delete)
+    @SaCheckRole(value = {Messages.Role.Role_Business,Messages.Role.Role_User},mode = SaMode.OR)
     public Result delete(@RequestParam("idList") List<String> idList) {
         return addressService.removeByIds(idList)?Result.success("删除成功"): Result.fail("删除失败");
     }

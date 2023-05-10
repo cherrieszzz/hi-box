@@ -1,6 +1,8 @@
 package com.itheima.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -16,6 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.itheima.util.Messages;
 import com.itheima.util.Urls;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -40,6 +43,7 @@ public class CategoryController {
      */
     @Resource
     private CategoryService categoryService;
+    @SaCheckRole(value = {Messages.Role.Role_Business,Messages.Role.Role_User},mode = SaMode.OR)
     @ApiOperation(value = "获取分类接口",notes = "获取分类信息")
     @GetMapping(Urls.category.getList)
     public Result getList(){
@@ -58,6 +62,7 @@ public class CategoryController {
             @ApiImplicitParam(name = "name",value = "查询条件 ",dataType = "String"),
     })
     @ApiOperation(value = "商品分类信息显示接口")
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @GetMapping(Urls.category.getPageList)
     public Result getPageList(Long pageNum,Long pageSize,String name){
         Page<Category> categoryPage = new Page<>(pageNum, pageSize);
@@ -88,6 +93,7 @@ public class CategoryController {
      */
     @ApiOperation(value = "新增接口")
     @ApiImplicitParam(name = "Category",value = "新增接口",dataType = "Category")
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @PostMapping(Urls.category.save)
     public Result insert(@RequestBody Category category) {
         if (StrUtil.isBlank(category.getName())){
@@ -112,6 +118,7 @@ public class CategoryController {
     @ApiOperation(value = "修改接口")
     @ApiImplicitParam(name = "Category",value = "新增分类接口",dataType = "Category")
     @PutMapping(Urls.category.update)
+    @SaCheckRole(value = Messages.Role.Role_Business)
     public Result update(@RequestBody Category category) {
         if (StrUtil.isBlank(category.getName())){
             return Result.fail("分类名不能为空");
@@ -128,6 +135,7 @@ public class CategoryController {
     @ApiOperation(value = "删除接口",notes = "可批量删除")
     @ApiImplicitParam(name = "idList",value = "删除分类接口",dataType = "List<String>")
     @DeleteMapping(Urls.category.delete)
+    @SaCheckRole(value = Messages.Role.Role_Business)
     public Result delete(@RequestBody List<Long> idList) {
         return categoryService.removeBatchByIds(idList)? Result.success("删除成功"): Result.fail("删除失败");
     }

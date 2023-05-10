@@ -1,9 +1,11 @@
 package com.itheima.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.itheima.dto.CommentDto;
 import com.itheima.entity.Comment;
 import com.itheima.service.CommentService;
 import com.itheima.entity.Result;
@@ -12,6 +14,7 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
+import com.itheima.util.Messages;
 import com.itheima.util.Urls;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -37,6 +40,7 @@ public class CommentController {
     @Resource
     private CommentService commentService;
 
+
     /**
      * 通过主键查询单条数据
      *
@@ -53,6 +57,7 @@ public class CommentController {
     })
     @ApiOperation(value = "显示评论接口",notes = "显示评论接口")
     @GetMapping(Urls.comment.getPageList)
+    @SaCheckRole(value = Messages.Role.Role_Business)
     public Result getPageList(Long pageNum,Long pageSize){
         Page<Comment> commentPage = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Comment> lqw = new LambdaQueryWrapper<>();
@@ -69,10 +74,11 @@ public class CommentController {
      * @param comment 实体对象
      * @return 新增结果
      */
+    @SaCheckRole(value = Messages.Role.Role_User)
     @ApiOperation(value = "新增评论接口",notes = "新增评论接口")
     @PostMapping(Urls.comment.save)
-    public Result insert(@RequestBody Comment comment) {
-        return commentService.save(comment)?Result.success("评论成功"): Result.fail("评论失败");
+    public Result insert(@RequestBody CommentDto comment) {
+        return commentService.setComment(comment)?Result.success("评论成功"): Result.fail("评论失败");
     }
 
     /**
@@ -82,6 +88,7 @@ public class CommentController {
      * @return 修改结果
      */
     @PutMapping(Urls.comment.update)
+    @SaCheckRole(value = Messages.Role.Role_User)
     @ApiOperation(value = "修改评论接口",notes = "修改评论接口")
     public Result update(@RequestBody Comment comment) {
         return commentService.updateById(comment)?Result.success("修改成功"):Result.fail("修改失败");
@@ -94,6 +101,7 @@ public class CommentController {
      * @return 删除结果
      */
     @ApiOperation(value = "删除评论接口",notes = "批量删除评论接口")
+    @SaCheckRole(value = Messages.Role.Role_User)
     @DeleteMapping(Urls.comment.delete)
     public Result delete(@RequestParam("idList") List<String> idList) {
         return commentService.removeByIds(idList)?Result.success("删除成功"): Result.fail("删除失败");
