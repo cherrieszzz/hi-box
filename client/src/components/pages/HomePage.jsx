@@ -22,6 +22,30 @@ function Screen() {
   )
 }
 
+function Paltform() {
+  return (
+    <div className='flex justify-around items-center'>
+      <div className=''>
+        <div className="mockup-phone">
+          <div className="camera"></div>
+          <div className="display">
+          <div className="artboard artboard-demo phone-1">
+          <span className='text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500'>Hi Box</span>
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="divider divider-horizontal">OR</div>
+      <div className="mockup-window border bg-base-300 min-w-[30rem]">
+        <div className="flex justify-center px-4 py-16 bg-base-200">
+        <span className='text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500'>Hi Box</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function Partner() {
 
   function PartnerCard({ partner }) {
@@ -108,6 +132,7 @@ export default function Home() {
     <CommonLayout>
       <Screen />
       <SectionPlat />
+      <Paltform />
       <Partner />
     </CommonLayout>
   )
