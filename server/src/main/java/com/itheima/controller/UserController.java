@@ -7,6 +7,8 @@ import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.session.SaSessionCustomUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -22,12 +24,10 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.itheima.util.*;
@@ -39,6 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.itheima.util.Messages.Email.getContendEnd1;
 
 /**
  * 用户信息(User)表控制层
@@ -133,8 +135,83 @@ public class UserController {
         }
         return Result.success("注册成功");
     }
+    @SaIgnore
+    @ApiImplicitParam(name = "User",value = "注册接口 用户/商家",dataType = "User")
+    @PostMapping(Urls.user.registeredEmail)
+    public Result registeredEmail(@RequestBody UserDto user,HttpSession session){
+        String code1 = user.getCode();
+        if (StrUtil.isBlank(code1)){
+            return Result.fail("验证码不能为空");
+        }
+        if (StrUtil.isBlank(user.getEmail())){
+            return Result.fail("邮箱不能为空");
+        }
+        String code = (String) session.getAttribute(user.getEmail());
+        if (StrUtil.isBlank(code)){
+            return Result.fail("请确认两次邮箱是否一致");
+        }
+        if (!code1.equals(code)){
+            return Result.fail("验证码不正确");
+        }
+        User extracted = extracted(user);
+        // 保存用户信息
+        userService.save(extracted);
+        if (extracted.getFlag()==null){
+            extracted.setFlag(0);
+        }
+        // 分配角色身份
+        if (!userService.setRoleName(extracted.getFlag(),extracted.getId())){
+            return Result.fail("分配角色失败");
+        }
+        session.removeAttribute(extracted.getEmail());
+        return Result.success("注册成功");
+    }
+    @SaIgnore
+    @PostMapping(Urls.user.sendCode)
+    public Result sendCode(@RequestBody User user, HttpSession session){
+        String email = user.getEmail();
+        if (StrUtil.isBlank(email)){
+            return Result.fail("邮箱不能为空");
+        }
+        if (RegexUtils.isEmailInvalid(email)){
+            return Result.fail("邮箱格式不正确");
+        }
+        LambdaUpdateWrapper<User> lqw = new LambdaUpdateWrapper<>();
+        lqw.eq(User::getEmail,user.getEmail());
+        List<User> one = userService.list(lqw);
+        if (!one.isEmpty()){
+            return Result.fail("邮箱重复,请重新输入");
+        }
+        // 验证码
+        String code = ValidateCodeUtils.generateValidateCode4String(6);
+        // 失效时间
+        DateTime setTimeout = DateUtil.offsetMinute(DateUtil.date(), 5);
+        String contend=Messages.Email.contendFix+code+Messages.Email.getContendEnd+setTimeout+getContendEnd1;
+        MailUtil.sendHtml(email,Messages.Email.subject,contend);
+        session.setAttribute(email,code);
+        // 5分钟失效
+        session.setMaxInactiveInterval(5*60);
+        return Result.success("邮箱发送成功");
+    }
 
     private Result getResult(User user) {
+        User extracted = extracted(user);
+        if (StrUtil.isBlank(extracted.getPhone())){
+            return Result.fail("手机号不能为空");
+        }
+        if (RegexUtils.isPhoneInvalid(extracted.getPhone())){
+            return Result.fail("手机号不正确");
+        }
+        LambdaUpdateWrapper<User> lqw = new LambdaUpdateWrapper<>();
+        lqw.eq(User::getPhone, extracted.getPhone());
+        List<User> one = userService.list(lqw);
+        if (!one.isEmpty()){
+            return Result.fail("手机号重复,请重新输入");
+        }
+        return null;
+    }
+
+    private static User extracted(User user) {
         // 默认账号
         String StrPrefix="hi-box_";
         String account=StrPrefix+RandomUtil.randomString(8);
@@ -150,19 +227,7 @@ public class UserController {
             // 默认昵称 指定账号
             user.setUsername(account);
         }
-        if (StrUtil.isBlank(user.getPhone())){
-            return Result.fail("手机号不能为空");
-        }
-        if (RegexUtils.isPhoneInvalid(user.getPhone())){
-            return Result.fail("手机号不正确");
-        }
-        LambdaUpdateWrapper<User> lqw = new LambdaUpdateWrapper<>();
-        lqw.eq(User::getPhone, user.getPhone());
-        List<User> one = userService.list(lqw);
-        if (!one.isEmpty()){
-            return Result.fail("手机号重复,请重新输入");
-        }
-        return null;
+        return user;
     }
 
     // 方法注释
@@ -174,7 +239,8 @@ public class UserController {
         LambdaUpdateWrapper<User> lqw = new LambdaUpdateWrapper<>();
         lqw.eq(StrUtil.isNotBlank(user.getAccount()),User::getAccount,user.getAccount()).or()
                 .eq(StrUtil.isNotBlank(user.getPhone()),User::getPhone,user.getPhone()).or()
-                .eq(StrUtil.isNotBlank(user.getUsername()),User::getUsername,user.getUsername());
+                .eq(StrUtil.isNotBlank(user.getUsername()),User::getUsername,user.getUsername()).or()
+                .eq(StrUtil.isNotBlank(user.getEmail()),User::getEmail,user.getPhone());
         User one = userService.getOne(lqw);
         if (one==null){
             return Result.fail("用户不存在");
