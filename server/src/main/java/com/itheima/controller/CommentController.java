@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequestMapping(Urls.comment.baseUrl)
-@Api(description = "评论CRUD接口",tags = "评论管理接口")
+@Api(description = "评论CRUD接口", tags = "评论管理接口")
 public class CommentController {
     /**
      * 服务对象
@@ -51,23 +51,25 @@ public class CommentController {
     public Result selectOne(@PathVariable Serializable id) {
         return Result.success("功能未开发");
     }
+
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum",value = "起始页数",dataType = "Long"),
-            @ApiImplicitParam(name = "pageSize",value = "每页页数",dataType = "Long")
+            @ApiImplicitParam(name = "pageNum", value = "起始页数", dataType = "Long"),
+            @ApiImplicitParam(name = "pageSize", value = "每页页数", dataType = "Long")
     })
-    @ApiOperation(value = "显示评论接口",notes = "显示评论接口")
+    @ApiOperation(value = "显示评论接口", notes = "显示评论接口")
     @GetMapping(Urls.comment.getPageList)
     @SaCheckRole(value = Messages.Role.Role_Business)
-    public Result getPageList(Long pageNum,Long pageSize){
+    public Result getPageList(Long pageNum, Long pageSize) {
         Page<Comment> commentPage = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Comment> lqw = new LambdaQueryWrapper<>();
         lqw.orderByAsc(Comment::getCreateTime).orderByDesc(Comment::getUpdateTime);
         Page<Comment> page = commentService.page(commentPage, lqw);
-        if (page==null){
+        if (page == null) {
             return Result.fail("查无信息");
         }
-        return Result.success(page,"查询成功");
+        return Result.success(page, "查询成功");
     }
+
     /**
      * 新增数据
      *
@@ -75,10 +77,10 @@ public class CommentController {
      * @return 新增结果
      */
     @SaCheckRole(value = Messages.Role.Role_User)
-    @ApiOperation(value = "新增评论接口",notes = "新增评论接口")
+    @ApiOperation(value = "新增评论接口", notes = "新增评论接口")
     @PostMapping(Urls.comment.save)
     public Result insert(@RequestBody CommentDto comment) {
-        return commentService.setComment(comment)?Result.success("评论成功"): Result.fail("评论失败");
+        return commentService.setComment(comment) ? Result.success("评论成功") : Result.fail("评论失败");
     }
 
     /**
@@ -89,9 +91,9 @@ public class CommentController {
      */
     @PutMapping(Urls.comment.update)
     @SaCheckRole(value = Messages.Role.Role_User)
-    @ApiOperation(value = "修改评论接口",notes = "修改评论接口")
+    @ApiOperation(value = "修改评论接口", notes = "修改评论接口")
     public Result update(@RequestBody Comment comment) {
-        return commentService.updateById(comment)?Result.success("修改成功"):Result.fail("修改失败");
+        return commentService.updateById(comment) ? Result.success("修改成功") : Result.fail("修改失败");
     }
 
     /**
@@ -100,11 +102,11 @@ public class CommentController {
      * @param idList 主键结合
      * @return 删除结果
      */
-    @ApiOperation(value = "删除评论接口",notes = "批量删除评论接口")
+    @ApiOperation(value = "删除评论接口", notes = "批量删除评论接口")
     @SaCheckRole(value = Messages.Role.Role_User)
     @DeleteMapping(Urls.comment.delete)
     public Result delete(@RequestParam("idList") List<String> idList) {
-        return commentService.removeByIds(idList)?Result.success("删除成功"): Result.fail("删除失败");
+        return commentService.removeByIds(idList) ? Result.success("删除成功") : Result.fail("删除失败");
     }
 }
 

@@ -9,29 +9,37 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * 七牛云工具类
  */
+@Component
+@Data
 public class QiniuUtils {
     /**
      * 公钥
      */
-    public static final String accessKey = "LpA7nTa8DFRfhZlGnxGH2XDeEDkpvH3e1I_lwMvq";
+    @Value("${QiNiuConfig.accessKey}")
+    private String accessKey ;
     /**
      * 私钥
      */
-    public static final String secretKey = "o-n-p9g4SXuZFq4fzdtXxOIcXye_wnVJswNTAAdP";
+    @Value("${QiNiuConfig.secretKey}")
+    private String secretKey ;
     /**
      * 存储空间
      */
-    public static final String bucket = "hi-box";
+    @Value("${QiNiuConfig.bucket}")
+    private String bucket ;
     /**
      * 存储区域
      */
-    private static final String MemoryArea = "z2";
-
-    private static Configuration getConfiguration(String MemoryArea) {
+    @Value("${QiNiuConfig.MemoryArea}")
+    private String MemoryArea ;
+    private  Configuration getConfiguration(String MemoryArea){
         //构造一个带指定Zone对象的配置类
         Configuration cfg;
         switch (MemoryArea) {
@@ -53,8 +61,7 @@ public class QiniuUtils {
         }
         return cfg;
     }
-
-    public static void upload2Qiniu(String filePath, String fileName) {
+    public  void upload2Qiniu(String filePath, String fileName) {
         Configuration cfg = getConfiguration(MemoryArea);
         UploadManager uploadManager = new UploadManager(cfg);
         Auth auth = Auth.create(accessKey, secretKey);
@@ -74,7 +81,7 @@ public class QiniuUtils {
     }
 
     //上传文件
-    public static void upload2Qiniu(byte[] bytes, String fileName) {
+    public  void upload2Qiniu(byte[] bytes, String fileName) {
         Configuration cfg = getConfiguration(MemoryArea);
         //...其他参数参考类注释
         UploadManager uploadManager = new UploadManager(cfg);
@@ -101,7 +108,7 @@ public class QiniuUtils {
     }
 
     //删除文件
-    public static void deleteFileFromQiniu(String fileName) {
+    public  void deleteFileFromQiniu(String fileName) {
         Configuration cfg = getConfiguration(MemoryArea);
         String key = fileName;
         Auth auth = Auth.create(accessKey, secretKey);

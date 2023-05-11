@@ -258,10 +258,17 @@ public class Urls {
         final static public String updatePassword="/updatePassword";
 
         /**
-         * 注册
+         * 手机号注册
          */
         final static public String registered="/registered";
-
+        /**
+         * 邮箱注册
+         */
+        final static public String registeredEmail="/registeredEmail";
+        /**
+         * 发送邮箱验证码
+         */
+        final static public String sendCode="/sendCode";
         /**
          * 登录
          */
