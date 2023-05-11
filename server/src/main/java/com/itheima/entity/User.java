@@ -89,6 +89,12 @@ public class User implements Serializable {
     private Integer status;
 
     /**
+     * 邮箱
+     */
+    @ApiModelProperty(value = "邮箱")
+    private String email;
+
+    /**
      * 浏览记录,多个逗号隔开
      */
     @ApiModelProperty(value = "浏览记录,多个逗号隔开")
