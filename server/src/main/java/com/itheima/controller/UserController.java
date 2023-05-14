@@ -61,13 +61,7 @@ public class UserController {
     @Resource
     private UserService userService;
     @Resource
-    private QiniuUtils qiniuUtils;
-    @SaIgnore
-    @GetMapping
-    void test(){
-        qiniuUtils.upload2Qiniu("D:\\hi-box\\server\\src\\main\\resources\\c.jpg","test.jpg");
-    }
-
+    private QiniuUtils QiniuUtils;
     @SaIgnore
     @ApiOperation(notes = "头像上传接口", value = "用户头像上传接口")
     @PostMapping(Urls.user.upload)
@@ -80,7 +74,7 @@ public class UserController {
         String fileName = UUID.randomUUID().toString() + suffix;
         //七牛云工具类 字节上传
         try {
-            qiniuUtils.upload2Qiniu(imgFile.getBytes(), fileName);
+            QiniuUtils.upload2Qiniu(imgFile.getBytes(), fileName);
             return Result.success(fileName, "上传成功");
         } catch (IOException e) {
             throw new BusinessException("上传失败");
@@ -333,7 +327,7 @@ public class UserController {
         // 更新图片先删除图片
         String img = userService.getById(user.getId()).getAvatar();
         if (!img.equals(user.getAvatar())) {
-            qiniuUtils.deleteFileFromQiniu(img);
+            QiniuUtils.deleteFileFromQiniu(img);
         }
         return userService.updateById(user) ? Result.success("修改成功") : Result.fail("修改失败");
     }
@@ -382,7 +376,7 @@ public class UserController {
     public Result delete(@RequestParam("idList") List<String> idList) {
         // 删除图片
         List<String> collect = userService.listByIds(idList).stream().map(User::getAvatar).filter(StrUtil::isNotBlank).collect(Collectors.toList());
-        collect.stream().forEach(qiniuUtils::deleteFileFromQiniu);
+        collect.stream().forEach(QiniuUtils::deleteFileFromQiniu);
         // 删除用户身份
         return userService.removeBatchByIds(idList) && userService.deleteUserRole(idList) ? Result.success("删除成功") : Result.fail("删除失败");
     }

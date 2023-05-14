@@ -50,7 +50,7 @@ public class GoodsController {
      * 服务对象
      */
     @Resource
-    private QiniuUtils qiniuUtils;
+    private QiniuUtils QiniuUtils;
     @Resource
     private GoodsService goodsService;
     @Resource
@@ -71,7 +71,7 @@ public class GoodsController {
         String fileName = UUID.randomUUID().toString() + suffix;
         //七牛云工具类 字节上传
         try {
-            qiniuUtils.upload2Qiniu(imgFile.getBytes(), fileName);
+            QiniuUtils.upload2Qiniu(imgFile.getBytes(), fileName);
             return Result.success(fileName, "上传成功");
         } catch (IOException e) {
             throw new BusinessException("上传失败");
@@ -214,7 +214,7 @@ public class GoodsController {
         List<String> list = goodsService.listByIds(idList).stream().map(Goods::getImg).filter(StrUtil::isNotBlank).collect(Collectors.toList());
         list.stream().forEach(item -> {
             String[] split = item.substring(0, item.lastIndexOf(",")).split(",");
-            Arrays.stream(split).forEach(qiniuUtils::deleteFileFromQiniu);
+            Arrays.stream(split).forEach(QiniuUtils::deleteFileFromQiniu);
         });
         // 删除商品对应的评论
         if (!goodsService.removeComment(idList)) {
