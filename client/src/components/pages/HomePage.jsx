@@ -24,7 +24,7 @@ function Screen() {
 
 function Paltform() {
   return (
-    <div className='flex justify-around items-center'>
+    <div className='flex justify-around items-center max-w-[60rem] mx-auto'>
       <div className=''>
         <div className="mockup-phone">
           <div className="camera"></div>
