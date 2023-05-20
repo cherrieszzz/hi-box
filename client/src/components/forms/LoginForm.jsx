@@ -1,15 +1,55 @@
 import { useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import nav_logo from '../../assets/logo.png'
+import axios from "axios";
+
+function SuccessModal() {
+    return (
+        <div className="alert alert-success shadow-lg">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>登陆成功!</span>
+            </div>
+        </div>
+    )
+}
+
+function Error() {
+    return (
+        <div className="alert alert-error shadow-lg">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>Error! Task failed successfully.</span>
+            </div>
+        </div>
+    )
+}
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(false);
 
     const handleLogin = (e) => {
         e.preventDefault();
         // Do something with the username and password
         console.log(`Logged in with username: ${username} and password: ${password}`);
+        axios.post('http://localhost:8001/user/login', { phone: username, password: password }).then((res) => {
+            console.log(res.data.data);
+            if (res.data.code == 200) {
+                setError(false);
+                setSuccess(true);
+            }
+            if(res.data.code !== 200) {
+                setSuccess(false);
+                setError(true);
+                console.log(res.data.data.token);
+                sessionStorage.setItem('token',res.data.data.token);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
     };
 
     return (
@@ -23,6 +63,8 @@ function Login() {
                     />
                     <h1 className="text-2xl font-black mt-2 ">登录Hibox</h1>
                 </div>
+                {success && <SuccessModal />}
+                {error && <Error />}
                 <form className="mt-6" onSubmit={handleLogin}>
                     <div>
                         <label className="block text-gray-600 font-semibold">用户名</label>
@@ -48,6 +90,7 @@ function Login() {
                         <button
                             type="submit"
                             className="w-full px-4 py-2 tracking-wide text-white bg-blue-500 rounded-lg hover:bg-blue-400 transition-colors"
+                            onClick={handleLogin}
                         >
                             登录
                         </button>
@@ -73,7 +116,7 @@ function Login() {
                 </div>
                 <div className="mt-4 text-center">
                     <p className="text-gray-500">
-                       没有账户?{" "}
+                        没有账户?{" "}
                         <a href="#"
                             className="text-blue-500 hover:text-blue-700 font-semibold"
                         >

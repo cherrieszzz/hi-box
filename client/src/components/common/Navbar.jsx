@@ -14,7 +14,7 @@ export default function Navbar() {
             <div className=''>
                 <ul className='flex items-center'>
                     <li className='mx-2'> <Link to='/'>文档</Link> </li>
-                    <li className='mx-2'> <Link to='/'>商城</Link> </li>
+                    <li className='mx-2'> <Link to='/goods'>商城</Link> </li>
                     <li className='mx-2'> <Link to='/'>生态系统</Link> </li>
                     <li className='mx-2'> <Link to='/'>合作伙伴</Link> </li>
                     <li className='mx-2'> <Link to='/'>赞助</Link> </li>
