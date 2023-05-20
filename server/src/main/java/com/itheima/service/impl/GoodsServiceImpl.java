@@ -22,19 +22,20 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     private GoodsMapper goodsMapper;
     @Resource
     private CommentMapper commentMapper;
+
     @Override
-    public boolean updateStatus(Integer status,Long id) {
-        return  goodsMapper.updateStatus(status,id);
+    public boolean updateStatus(Integer status, Long id) {
+        return goodsMapper.updateStatus(status, id);
 
     }
 
     @Override
     public boolean removeComment(List<String> idList) {
-        boolean flag=false;
-        if (commentMapper.deleteBatchIds(idList)>0){
-            flag=true;
+        boolean flag = false;
+        if (commentMapper.deleteBatchIds(idList) > 0) {
+            flag = true;
         }
-        return flag&&commentMapper.removeComment(idList);
+        return flag && commentMapper.removeComment(idList);
 
     }
 

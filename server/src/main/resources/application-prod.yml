@@ -6,7 +6,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    url: ${DB_URL}
+    url: ${DB_URL}?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: 43.207.180.13
@@ -48,3 +48,10 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: false
+QiNiuConfig:
+  accessKey: ${QiNiuConfig_accessKey}
+  secretKey: ${QiNiuConfig_secretKey}
+  bucket: ${QiNiuConfig_bucket}
+  MemoryArea: ${QiNiuConfig_MemoryArea}
+
+

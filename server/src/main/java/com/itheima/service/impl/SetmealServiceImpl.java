@@ -20,31 +20,32 @@ import java.util.List;
 public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> implements SetmealService {
     @Resource
     SetmealMapper setmealMapper;
+
     @Override
     public boolean updateStatus(List<Long> collect) {
-        boolean flag=false;
-        if (setmealMapper.updateStatus(collect)>0){
-            flag=true;
+        boolean flag = false;
+        if (setmealMapper.updateStatus(collect) > 0) {
+            flag = true;
         }
-        return flag&& setmealMapper.deleteSetmeal(collect);
+        return flag && setmealMapper.deleteSetmeal(collect);
 
     }
 
     @Override
     public boolean saveSetMeal(SetmealDto setmeal) {
         for (String s : setmeal.getImgList()) {
-            setmealMapper.insertSetMeal(setmeal.getId(), Long.valueOf(s),setmeal.getName(),setmeal.getPrice());
+            setmealMapper.insertSetMeal(setmeal.getId(), Long.valueOf(s), setmeal.getName(), setmeal.getPrice());
         }
         return setmealMapper.insert(setmeal) > 0;
     }
 
     @Override
     public boolean removeSetmeal(List<String> idList) {
-        boolean flag=false;
-        if (setmealMapper.deleteBatchIds(idList)>0){
-            flag=true;
+        boolean flag = false;
+        if (setmealMapper.deleteBatchIds(idList) > 0) {
+            flag = true;
         }
-        return setmealMapper.deleteSetmealBysetMealId(idList)&&flag;
+        return setmealMapper.deleteSetmealBysetMealId(idList) && flag;
     }
 }
 

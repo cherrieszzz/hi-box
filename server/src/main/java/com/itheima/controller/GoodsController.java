@@ -50,6 +50,8 @@ public class GoodsController {
      * 服务对象
      */
     @Resource
+    private QiniuUtils QiniuUtils;
+    @Resource
     private GoodsService goodsService;
     @Resource
     private CategoryService categoryService;
@@ -75,54 +77,57 @@ public class GoodsController {
             throw new BusinessException("上传失败");
         }
     }
+
     @PostMapping(Urls.goods.setComment)
-    public Result setComment(@RequestBody CommentDto commentDto){
-        return commentService.setComment(commentDto)?Result.success("设置评论成功"):Result.fail("设置评论失败");
+    public Result setComment(@RequestBody CommentDto commentDto) {
+        return commentService.setComment(commentDto) ? Result.success("设置评论成功") : Result.fail("设置评论失败");
     }
 
-    @SaCheckRole(value =Messages.Role.Role_Business)
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @GetMapping(Urls.goods.updateStatus)
-    public Result updateStatus( Long id){
+    public Result updateStatus(Long id) {
         Goods one = goodsService.getById(id);
-        if (one.getStatus()==1){
+        if (one.getStatus() == 1) {
             one.setStatus(0);
-        }else{
+        } else {
             one.setStatus(1);
         }
-        return goodsService.updateById(one)? Result.success("修改状态成功"): Result.fail("修改状态失败");
+        return goodsService.updateById(one) ? Result.success("修改状态成功") : Result.fail("修改状态失败");
     }
+
     @GetMapping(Urls.goods.getPageList)
-    @SaCheckRole(value =Messages.Role.Role_Business)
-    public Result getPageList(Long pageNum,Long pageSize,String name,String status,String categoryId){
+    @SaCheckRole(value = Messages.Role.Role_Business)
+    public Result getPageList(Long pageNum, Long pageSize, String name, String status, String categoryId) {
         Page<Goods> goodsPage = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Goods> lqw = new LambdaQueryWrapper<>();
-        lqw.like(StrUtil.isNotBlank(name),Goods::getName,name)
-                .eq(StrUtil.isNotBlank(categoryId),Goods::getCategoryId,categoryId)
-                .eq(StrUtil.isNotBlank(status),Goods::getStatus,status)
-                .gt(Goods::getInventory,0)
+        lqw.like(StrUtil.isNotBlank(name), Goods::getName, name)
+                .eq(StrUtil.isNotBlank(categoryId), Goods::getCategoryId, categoryId)
+                .eq(StrUtil.isNotBlank(status), Goods::getStatus, status)
+                .gt(Goods::getInventory, 0)
                 .orderByAsc(Goods::getCreateTime).orderByDesc(Goods::getUpdateTime);
         Page<Goods> page = goodsService.page(goodsPage, lqw);
         Page<GoodsDto> goodsDtoPage = new Page<>();
-        if (page==null){
+        if (page == null) {
             return Result.fail("查无此信息");
         }
-        BeanUtil.copyProperties(page,goodsDtoPage,"records");
+        BeanUtil.copyProperties(page, goodsDtoPage, "records");
         List<Goods> records = page.getRecords();
         ArrayList<GoodsDto> goodsDtos = new ArrayList<>();
-        records.stream().forEach(item->{
+        records.stream().forEach(item -> {
             GoodsDto goodsDto = new GoodsDto();
-            BeanUtil.copyProperties(item,goodsDto);
+            BeanUtil.copyProperties(item, goodsDto);
             Category byId = categoryService.getById(item.getCategoryId());
             goodsDto.setCategoryName(byId.getName());
             goodsDtos.add(goodsDto);
         });
-        if (ObjectUtil.isEmpty(goodsDtos)){
+        if (ObjectUtil.isEmpty(goodsDtos)) {
             return Result.fail("查无此信息");
         }
         goodsDtoPage.setRecords(goodsDtos);
         goodsDtoPage.setTotal(goodsDtos.size());
-        return Result.success(goodsDtoPage,"信息查询成功");
+        return Result.success(goodsDtoPage, "信息查询成功");
     }
+
     /**
      * 通过主键查询单条数据
      *
@@ -140,40 +145,40 @@ public class GoodsController {
      * @param goods 实体对象
      * @return 新增结果
      */
-    @SaCheckRole(value =Messages.Role.Role_Business)
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @PostMapping(Urls.goods.save)
     public Result insert(@RequestBody GoodsDto goods) {
         Result result = getResult(goods);
         if (result != null) {
             return result;
         }
-        if (!goods.getImgList().isEmpty()){
-            String img="";
+        if (!goods.getImgList().isEmpty()) {
+            String img = "";
             for (String s : goods.getImgList()) {
-                img=img+s+",";
+                img = img + s + ",";
             }
             goods.setImg(img);
         }
-        return goodsService.save(goods)?Result.success("添加商品成功"):Result.fail("添加商品失败");
+        return goodsService.save(goods) ? Result.success("添加商品成功") : Result.fail("添加商品失败");
     }
 
     private static Result getResult(GoodsDto goods) {
-        if (StrUtil.isBlank(goods.getName())){
+        if (StrUtil.isBlank(goods.getName())) {
             return Result.fail("商品名称不能为空");
         }
-        if (StrUtil.isBlank(goods.getCategoryId())){
+        if (StrUtil.isBlank(goods.getCategoryId())) {
             return Result.fail("商品分类不能为空");
         }
-        if (goods.getInventory()<=0){
+        if (goods.getInventory() <= 0) {
             return Result.fail("商品库存不能为空");
         }
-        if (goods.getOriginalPrice()<0){
+        if (goods.getOriginalPrice() < 0) {
             return Result.fail("商品原价输入错误");
         }
-        if (goods.getSellingPrice()<0){
+        if (goods.getSellingPrice() < 0) {
             return Result.fail("商品售价输入错误");
         }
-        if (StrUtil.isBlank(goods.getImg())&&ObjectUtil.isEmpty(goods.getImgList())){
+        if (StrUtil.isBlank(goods.getImg()) && ObjectUtil.isEmpty(goods.getImgList())) {
             return Result.fail("商品展示图至少一张");
         }
 
@@ -186,14 +191,14 @@ public class GoodsController {
      * @param goods 实体对象
      * @return 修改结果
      */
-    @SaCheckRole(value =Messages.Role.Role_Business)
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @PutMapping(Urls.goods.update)
     public Result update(@RequestBody GoodsDto goods) {
         Result result = getResult(goods);
         if (result != null) {
             return result;
         }
-        return goodsService.updateById(goods)?Result.success("修改商品成功"):Result.fail("修改商品失败");
+        return goodsService.updateById(goods) ? Result.success("修改商品成功") : Result.fail("修改商品失败");
     }
 
     /**
@@ -202,28 +207,28 @@ public class GoodsController {
      * @param idList 主键结合
      * @return 删除结果
      */
-    @SaCheckRole(value =Messages.Role.Role_Business)
+    @SaCheckRole(value = Messages.Role.Role_Business)
     @DeleteMapping(Urls.goods.delete)
     public Result delete(@RequestParam("idList") List<String> idList) {
         // 删除图片
         List<String> list = goodsService.listByIds(idList).stream().map(Goods::getImg).filter(StrUtil::isNotBlank).collect(Collectors.toList());
-        list.stream().forEach(item->{
-            String[] split = item.substring(0,item.lastIndexOf(",")).split(",");
+        list.stream().forEach(item -> {
+            String[] split = item.substring(0, item.lastIndexOf(",")).split(",");
             Arrays.stream(split).forEach(QiniuUtils::deleteFileFromQiniu);
         });
         // 删除商品对应的评论
-        if (!goodsService.removeComment(idList)){
+        if (!goodsService.removeComment(idList)) {
             return Result.fail("删除商品评论失败");
         }
         // 下架商品对应的套餐
         List<Long> setmealId = goodsService.getSetmealId(idList);
-        if (!setmealId.isEmpty()){
+        if (!setmealId.isEmpty()) {
             List<Long> collect = setmealId.stream().distinct().collect(Collectors.toList());
-            if (!setmealService.updateStatus(collect)){
+            if (!setmealService.updateStatus(collect)) {
                 return Result.fail("下架套餐失败");
             }
         }
-        return goodsService.removeByIds(idList)?Result.success("删除商品成功"):Result.fail("删除商品失败");
+        return goodsService.removeByIds(idList) ? Result.success("删除商品成功") : Result.fail("删除商品失败");
     }
 }
 

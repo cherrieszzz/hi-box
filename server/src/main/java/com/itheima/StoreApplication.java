@@ -11,15 +11,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 @Slf4j
 public class StoreApplication implements WebMvcConfigurer {
+<<<<<<< HEAD
 /*    public void addInterceptors(InterceptorRegistry registry) {
         // 注册 Sa-Token 拦截器，校验规则为 StpUtil.checkLogin() 登录校验。
         registry.addInterceptor(new SaInterceptor(handle -> {
                     log.info("当前用户角色集合:" + StpUtil.getRoleList());
                     log.info("当前用户权限集合:" + StpUtil.getPermissionList());
 
+=======
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 注册 Sa-Token 拦截器，
+        registry.addInterceptor(new SaInterceptor(handle -> {
+                    log.info("当前用户角色集合:" + StpUtil.getRoleList());
+                    log.info("当前用户权限集合:" + StpUtil.getPermissionList());
+>>>>>>> origin/main
                 }))
                 .addPathPatterns("/**");
     }*/
+
 
     public static void main(String[] args) {
         SpringApplication.run(StoreApplication.class, args);

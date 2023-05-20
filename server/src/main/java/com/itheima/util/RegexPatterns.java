@@ -11,7 +11,7 @@ public abstract class RegexPatterns {
     /**
      * 邮箱正则
      */
-    public static final String EMAIL_REGEX = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+    public static final String EMAIL_REGEX = "^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$";
     /**
      * 密码正则。4~32位的字母、数字、下划线
      */

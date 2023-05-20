@@ -18,7 +18,8 @@ import java.util.List;
 @Mapper
 public interface CommentMapper extends BaseMapper<Comment> {
     @Insert("insert into goods_comment values (#{userId},#{commentId})")
-    boolean setComment(Long userId,Long commentId);
+    boolean setComment(Long userId, Long commentId);
+
     @Delete("delete from goods_comment where user_id in (#{idList})")
     boolean removeComment(List<String> idList);
 }

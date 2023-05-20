@@ -17,7 +17,8 @@ import java.util.List;
 @Mapper
 public interface GoodsMapper extends BaseMapper<Goods> {
     @Update("update goods set status=#{status} where id=#{id} ")
-    boolean updateStatus(Integer status,Long id);
+    boolean updateStatus(Integer status, Long id);
+
     @Select("select setmealId from setmeal_goods where goods_id in (#{idList})")
     List<Long> getSetmealId(List<String> idList);
 }

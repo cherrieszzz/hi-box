@@ -19,14 +19,15 @@ import javax.annotation.Resource;
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
     @Resource
     private CommentMapper commentMapper;
+
     @Override
     public boolean setComment(CommentDto commentDto) {
-        boolean flag=false;
-        if (commentMapper.insert(commentDto)>0){
-            flag=true;
+        boolean flag = false;
+        if (commentMapper.insert(commentDto) > 0) {
+            flag = true;
         }
 
-        return flag&&commentMapper.setComment(commentDto.getGoodsId(),commentDto.getId());
+        return flag && commentMapper.setComment(commentDto.getGoodsId(), commentDto.getId());
     }
 
 
