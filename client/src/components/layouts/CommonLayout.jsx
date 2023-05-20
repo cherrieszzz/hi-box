@@ -6,7 +6,7 @@ export default function CommonLayout({ children }) {
     return (
         <>
             <Navbar />
-            <div className='mt-[20vh]'>
+            <div className='mt-[20vh] mb-[10vh] max-w-[80rem] mx-auto min-h-[50rem]'>
                 {children}
             </div>
             <Footer />
