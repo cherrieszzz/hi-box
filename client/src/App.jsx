@@ -8,6 +8,7 @@ import AdminPage from "./components/pages/AdminPage";
 import SignupPage from './components/pages/SignupPage';
 import UserPage from './components/pages/UserPage';
 import GoodsPage from './components/pages/GoodsPage';
+import GoodsDetailPage from './components/pages/GoodsDetailPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path='/sign' element={<SignupPage />} />
         <Route path='/me' element={<UserPage />} />
         <Route path='/goods' element={<GoodsPage />} />
+        <Route path='/gooddetail' element={<GoodsDetailPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { LockClosedIcon } from "@heroicons/react/solid";
 import nav_logo from '../../assets/logo.png'
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function SuccessModal() {
     return (
@@ -19,7 +19,7 @@ function Error() {
         <div className="alert alert-error shadow-lg">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span>Error! Task failed successfully.</span>
+                <span>登录失败，请检查你的手机号和密码</span>
             </div>
         </div>
     )
@@ -30,6 +30,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -37,9 +38,10 @@ function Login() {
         console.log(`Logged in with username: ${username} and password: ${password}`);
         axios.post('http://localhost:8001/user/login', { phone: username, password: password }).then((res) => {
             console.log(res.data.data);
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
                 setError(false);
                 setSuccess(true);
+                navigate('/');
             }
             if(res.data.code !== 200) {
                 setSuccess(false);
@@ -97,7 +99,7 @@ function Login() {
                     </div>
                 </form>
                 <div className="mt-4 text-center">
-                    <a href="#" className="text-blue-500 hover:text-blue-700 font-semibold">
+                    <a href="/" className="text-blue-500 hover:text-blue-700 font-semibold">
                         忘记密码？
                     </a>
                 </div>
@@ -117,7 +119,7 @@ function Login() {
                 <div className="mt-4 text-center">
                     <p className="text-gray-500">
                         没有账户?{" "}
-                        <a href="#"
+                        <a href="/"
                             className="text-blue-500 hover:text-blue-700 font-semibold"
                         >
                             注册

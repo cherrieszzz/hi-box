@@ -2,15 +2,18 @@ import { useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import nav_logo from '../../assets/logo.png'
 import {Link} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rePassword, setRePassword] = useState("");
+    const navigate = useNavigate();
 
     const handleSignup = (e) => {
         e.preventDefault();
         // Do something with the username and password
+        navigate('/');
         console.log(`Logged in with username: ${username} and password: ${password}`);
     };
 
