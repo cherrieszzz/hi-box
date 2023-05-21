@@ -21,10 +21,10 @@ public class Messages {
     }
     public class Email{
         // 主题
-        final static public String subject="hi-box官方验证码";
+        final static public String subject="Hi-Box官方验证码";
         // 前缀内容+code+data+后缀
         final static public String contendFix="<h1>亲爱的用户：您好！</h1>" +
-                 "    <p>您收到这封电子邮件是因为您 (也可能是某人冒充您的名义) 注册 hi-box 账号。假如这不是您本人所申请, 请不用理会这封电子邮件, 但是如果您持续收到这类的信件骚扰, 请您尽快联络管理员。</p>" +
+                 "    <p>您收到这封电子邮件是因为您 (也可能是某人冒充您的名义) 注册 <b>Hi-Box</b> 账号。假如这不是您本人所申请, 请不用理会这封电子邮件, 但是如果您持续收到这类的信件骚扰, 请您尽快联络管理员。</p>" +
                 "   <p>请使用以下验证码完成后续注册账号流程</p><h2><b>"  ;
 
         final static public String getContendEnd="</b></h2>" +"  <p>注意：请您收到邮件的五分钟内（<b>";
