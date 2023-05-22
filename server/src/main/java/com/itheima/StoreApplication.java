@@ -15,7 +15,7 @@ import java.util.List;
 @SpringBootApplication
 @Slf4j
 public class StoreApplication implements WebMvcConfigurer {
-    // 排除文件上传
+    // 排除文件上传。。
     List<String> excludePathPatterns= Arrays.asList("/goods/upload", "/user/upload");
 /*    public void addInterceptors(InterceptorRegistry registry) {
         // 注册 Sa-Token 拦截器，
