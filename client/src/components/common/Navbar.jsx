@@ -14,7 +14,7 @@ export default function Navbar() {
             <div className=''>
                 <ul className='flex items-center'>
                     <li className='mx-2'> <Link to='/'>文档</Link> </li>
-                    <li className='mx-2'> <Link to='/'>商城</Link> </li>
+                    <li className='mx-2'> <Link to='/goods'>商城</Link> </li>
                     <li className='mx-2'> <Link to='/'>生态系统</Link> </li>
                     <li className='mx-2'> <Link to='/'>合作伙伴</Link> </li>
                     <li className='mx-2'> <Link to='/'>赞助</Link> </li>
@@ -23,6 +23,9 @@ export default function Navbar() {
                     <li className='mx-2'><Link to='https://github.com/cherrieszzz/hi-box'><svg aria-hidden="true" className='w-7 h-7'> <use xlinkHref="#icon-github-fill"></use> </svg></Link> </li>
                     <li className='mx-2'><Link to='https://github.com/cherrieszzz/hi-box'><svg aria-hidden="true" className='w-7 h-7'> <use xlinkHref="#icon-wechat"></use> </svg></Link> </li>
                     <li className='mx-2'><Link to='https://github.com/cherrieszzz/hi-box'><svg aria-hidden="true" className='w-7 h-7'> <use xlinkHref="#icon-qq"></use> </svg></Link> </li>
+                    <li className='mx-2'><Link to='https://www.douyin.com/user/MS4wLjABAAAAYwDptOsZA2dit3yphA_HmaAXMSFgtZmn5-5ectIIuy6mGGRktPqvv4mEgRb6ODHh'><svg aria-hidden="true" className='w-7 h-7'> <use xlinkHref="#icon-tiktok"></use> </svg></Link> </li>
+                    <li className='mx-2'><Link to='https://www.xiaohongshu.com/user/profile/5c561b89000000001802e3e7'><svg aria-hidden="true" className='w-7 h-7'> <use xlinkHref="#icon-jiaqiangban"></use> </svg></Link> </li>
+                    <li className='mx-2'><Link to={'/me'}>me</Link> </li>
                 </ul>
             </div>
         </div>

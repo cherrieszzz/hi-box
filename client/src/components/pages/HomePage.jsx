@@ -7,7 +7,7 @@ import pony_logo from '../../assets/pony_logo.jpg'
 
 function Screen() {
   return (
-    <div className='flex flex-col items-center space-y-3'>
+    <div className='flex flex-col items-center space-y-3 mt-[15rem]'>
       <h1 className='flex flex-col items-center'>
         <span className='text-7xl font-black bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500'>Hi Box</span>
         <br />
@@ -24,7 +24,7 @@ function Screen() {
 
 function Paltform() {
   return (
-    <div className='flex justify-around items-center'>
+    <div className='flex justify-around items-center max-w-[60rem] mx-auto'>
       <div className=''>
         <div className="mockup-phone">
           <div className="camera"></div>
