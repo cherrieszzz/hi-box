@@ -8,25 +8,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @SpringBootApplication
 @Slf4j
 public class StoreApplication implements WebMvcConfigurer {
-<<<<<<< HEAD
+    // 排除文件上传。。
+    List<String> excludePathPatterns= Arrays.asList("/goods/upload", "/user/upload");
 /*    public void addInterceptors(InterceptorRegistry registry) {
-        // 注册 Sa-Token 拦截器，校验规则为 StpUtil.checkLogin() 登录校验。
-        registry.addInterceptor(new SaInterceptor(handle -> {
-                    log.info("当前用户角色集合:" + StpUtil.getRoleList());
-                    log.info("当前用户权限集合:" + StpUtil.getPermissionList());
-
-=======
-    public void addInterceptors(InterceptorRegistry registry) {
         // 注册 Sa-Token 拦截器，
         registry.addInterceptor(new SaInterceptor(handle -> {
                     log.info("当前用户角色集合:" + StpUtil.getRoleList());
                     log.info("当前用户权限集合:" + StpUtil.getPermissionList());
->>>>>>> origin/main
+                    StpUtil.checkLogin();
                 }))
-                .addPathPatterns("/**");
+                .addPathPatterns("/**")
+                .excludePathPatterns(excludePathPatterns);
     }*/
 
 

@@ -107,8 +107,6 @@ public class CategoryController {
         if (!ObjectUtil.isEmpty(categoryService.list(lqw))) {
             return Result.fail("该分类已存在:" + category.getName());
         }
-
-
         return categoryService.save(category) ? Result.success("分类新增成功") : Result.fail("未知错误");
     }
 

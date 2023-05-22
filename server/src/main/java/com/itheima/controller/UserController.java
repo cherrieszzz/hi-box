@@ -10,6 +10,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -63,6 +64,13 @@ public class UserController {
     @Resource
     private QiniuUtils QiniuUtils;
     @SaIgnore
+    @GetMapping
+    public String test(){
+        String filename = IdUtil.fastUUID()+".jpg";
+        QiniuUtils.upload2Qiniu("D:\\hi-box\\server\\src\\main\\resources\\37bb8736-8fec-400e-8994-0c06a465976d.jpg",filename);
+        return "上传成功,文件名："+filename;
+    }
+    @SaIgnore
     @ApiOperation(notes = "头像上传接口", value = "用户头像上传接口")
     @PostMapping(Urls.user.upload)
     Result Upload(@RequestBody MultipartFile imgFile) {
@@ -87,9 +95,10 @@ public class UserController {
             @ApiImplicitParam(name = "search", value = "查询条件 phone/username/account", dataType = "String")
     })
     @ApiOperation(value = "用户信息显示接口")
-    @SaCheckRole(value = Messages.Role.Role_Business)
+    //@SaCheckRole(value = Messages.Role.Role_Business)
+    @SaIgnore
     @GetMapping(Urls.user.PersonList)
-    public Result PersonList(Integer pageNum, Integer pageSize, String search) {
+    public Result PersonList( Integer pageNum, Integer pageSize, String search) {
         Page<User> userPage = new Page<User>(pageNum, pageSize);
         LambdaUpdateWrapper<User> lqw = new LambdaUpdateWrapper<>();
         lqw.like(StrUtil.isNotBlank(search), User::getUsername, search).or()
@@ -265,10 +274,14 @@ public class UserController {
         UserDto userDto = new UserDto();
         BeanUtil.copyProperties(one, userDto);
         StpUtil.login(one.getId());
+        String roleName = userService.getRoleName(one.getFlag());
+        userDto.setRoleName(roleName);
+        // 最简单的身份验证
+/*        userDto.setRoleName(Messages.Role.Role_Business);
         if (one.getFlag() == 0) {
             userDto.setRoleName(Messages.Role.Role_User);
-        }
-        userDto.setRoleName(Messages.Role.Role_Business);
+        }*/
+
         userDto.setSatoken(StpUtil.getTokenInfo().tokenValue);
         // 在登录时缓存user对象
         StpUtil.getSession().set("user", userDto);
@@ -281,9 +294,10 @@ public class UserController {
      * @param id 主键
      * @return 单条数据
      */
+    @SaIgnore
     @GetMapping("{id}")
     public Result selectOne(@PathVariable Serializable id) {
-        return Result.success("功能未开发");
+        return Result.success(id,"功能未开发");
     }
 
     /**
