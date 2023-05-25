@@ -9,6 +9,12 @@ import SignupPage from './components/pages/SignupPage';
 import UserPage from './components/pages/UserPage';
 import GoodsPage from './components/pages/GoodsPage';
 import GoodsDetailPage from './components/pages/GoodsDetailPage';
+import Personalise from './components/pages/Personalise';
+import Bigdata from './components/pages/Bigdata';
+import Envir from './components/pages/Envir';
+import Docs from './components/pages/Docs';
+import Partner from './components/pages/Partner';
+import About from './components/pages/About';
 
 function App() {
   return (
@@ -22,6 +28,12 @@ function App() {
         <Route path='/me' element={<UserPage />} />
         <Route path='/goods' element={<GoodsPage />} />
         <Route path='/gooddetail' element={<GoodsDetailPage />} />
+        <Route path='/persion' element={<Personalise />} />
+        <Route path='/bigdata' element={<Bigdata />} />
+        <Route path='/envir' element={<Envir />} />
+        <Route path='/docs' element={<Docs />} />
+        <Route path='/partner' element={<Partner />} />
+        <Route path='/about' element={<About />} />
       </Routes>
     </BrowserRouter>
   );
