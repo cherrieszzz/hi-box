@@ -8,7 +8,7 @@ const goods = [
     id: 1,
     name: "Product 1",
     price: 19.99,
-    category: "Electronics",
+    category: "Electronics",   
     image: "https://via.placeholder.com/300.png?text=Product1",
   },
   {

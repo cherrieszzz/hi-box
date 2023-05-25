@@ -4,6 +4,7 @@ import haut_logo from '../../assets/haut_logo.png'
 import zzuli_logo from '../../assets/zzuli_logo.jpg'
 import hati_logo from '../../assets/hati_logo.png'
 import pony_logo from '../../assets/pony_logo.jpg'
+import { Link } from 'react-router-dom'
 
 function Screen() {
   return (
@@ -108,7 +109,7 @@ function SectionPlat() {
       <div className='max-w-[20rem] flex flex-col items-center space-y-[2rem]'>
         <svg aria-hidden="true" className='w-[18rem]'> <use xlinkHref="#icon-dingzhi"></use> </svg>
         <h2 className='font-black text-2xl'>
-          私人定制
+          <Link to={'/persion'}>私人定制</Link>
         </h2>
         <p className='text-gray-600'>
           我们提供专业的私人订制服务，满足你的个性化需求。我们的团队将会与你紧密合作，确保你得到最满意的结果。快来尝试吧！
