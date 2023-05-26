@@ -1,0 +1,57 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 43.207.180.13
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 10 #最大连接数
+        max-idle: 10   #最大等待连接中的数量
+        min-idle: 1     #最小等待连接中的数量
+        #定时任务，检查连接池中的连接是否满足至少有 min-idle 的个数，同时，不超过 max-idle 那么多个数
+        time-between-eviction-runs: 10s
+  config:
+    import: optional:file:.env[.properties]
+
+server:
+  port: ${PORT}
+mybatis-plus:
+  configuration:
+    #日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #驼峰命名
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      #table-prefix: t_ #表前缀
+      id-type: auto
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: token
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false
+QiNiuConfig:
+  accessKey: ${QiNiuConfig_accessKey}
+  secretKey: ${QiNiuConfig_secretKey}
+  bucket: ${QiNiuConfig_bucket}
+  MemoryArea: ${QiNiuConfig_MemoryArea}
+
+

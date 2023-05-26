@@ -1,3 +1,60 @@
+/* ./your-css-folder/styles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*, :before, :after {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+ul ol {
+  list-style: none;
+  margin: 0;
+}
+
+.icon {
+  width: 2.5em;
+  height: 2.5em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+
+.logo {
+  width: 15rem;
+  height: 7.5rem;
+}
+
+
+.icon-screen-react {
+  width: 10em;
+  height: 10em;
+}
+
+.postcard {
+  border-radius: 10px;
+  background-color: #F6F7F9;
+  padding: 0.4rem 0.9rem;
+  margin: 1rem 0;
+  border: 1px solid;
+}
+
+.postcard a {
+  text-decoration: none;
+  color: #333;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,3 +68,4 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
