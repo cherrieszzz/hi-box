@@ -56,7 +56,10 @@ function PartnerLayer() {
   return (
     <div className='container w-sm mx-auto my-[15rem]'>
       <div className='max-w-[50rem] mx-auto'>
+        <div className='w-full flex justify-center'>
         <h2 className='font-black text-lg'>合作伙伴</h2>
+        </div>
+  
         <h3>合作高校</h3>
         <div className='grid grid-cols-3 gap-1 grid-flow-row max-w-[50rem] mx-auto'>
           {
@@ -93,7 +96,6 @@ const Partner = () => {
       <PartnerLayer />
     </div>
     </CommonLayout>
-
   )
 }
 
