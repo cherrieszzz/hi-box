@@ -323,7 +323,7 @@ const App = () => {
                   <Text>
                     大数据由巨型数据集组成，这些数据集规模超出了常用软件在可接受时间下的收集、管理、处理和使用能力。大数据是指数据量大、数据类型多样、数据处理速度等方面都非常具有挑战性的数据。
                   </Text>
-                  <Row>
+                  <Row style={{display:"flex",justifyContent:"space-around",width:"100%",padding:'3rem 2rem'}}>
                     <Card
                       title="大数据优势"
                       bordered={false}
@@ -402,8 +402,8 @@ const App = () => {
                       <b>近五年大数据就业形势</b>
                     </p>
                   </Title>
-                  <Row>
-                    <Col span={8}>
+                  <Row style={{display:"flex", width:'100%', justifyContent:"space-around"}}>
+                    <Col style={{}}>
                       <AreaChart
                         width={450}
                         height={300}
@@ -519,7 +519,7 @@ const App = () => {
                         />
                       </AreaChart>
                     </Col>
-                    <Col span={14}>
+                    <Col style={{}}>
                       <BarChart width={500} height={300} data={job}>
                         <XAxis dataKey="year" />
                         <YAxis />
