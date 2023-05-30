@@ -4,9 +4,9 @@ import CommonLayout from '../layouts/CommonLayout'
 const Docs = () => {
   return (
     <CommonLayout>
- <div>Docs</div>
+      <div>Docs</div>
     </CommonLayout>
-   
+
   )
 }
 

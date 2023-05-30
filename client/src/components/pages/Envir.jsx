@@ -4,7 +4,7 @@ import CommonLayout from '../layouts/CommonLayout'
 const Envir = () => {
   return (
     <CommonLayout>
-    <div>Envir</div>
+      <div>Envir</div>
     </CommonLayout>
 
   )
