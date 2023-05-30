@@ -497,7 +497,7 @@ const App = () => {
                     style={{
                       width: '100%',
                     }}
-                    title="工作原理"
+                    title="面临挑战"
                     tabList={tabList1}
                     activeTabKey={activeTabKey11}
                     onTabChange={onTab1Change1}
