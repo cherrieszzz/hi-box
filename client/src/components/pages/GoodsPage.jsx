@@ -2,147 +2,31 @@ import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import CommonLayout from "../layouts/CommonLayout";
 import { Link } from "react-router-dom";
+import nutrition_powder from "../../assets/nutrition_powder.jpg";
+import nutr_powder from "../../assets/nutr_powder.jpg";
+import nutrition_pills from "../../assets/nutrition_pills.jpg";
 
 const goods = [
   {
     id: 1,
-    name: "Product 1",
-    price: 19.99,
+    name: "高熵营养粉",
+    price: 39.99,
     category: "Electronics",   
-    image: "https://via.placeholder.com/300.png?text=Product1",
+    image: nutr_powder,
   },
   {
     id: 2,
-    name: "Product 2",
-    price: 9.99,
+    name: "高熵营养粉-大罐装",
+    price: 49.99,
     category: "Clothing",
-    image: "https://via.placeholder.com/300.png?text=Product2",
+    image: nutrition_powder,
   },
   {
     id: 3,
-    name: "Product 3",
-    price: 49.99,
-    category: "Home",
-    image: "https://via.placeholder.com/300.png?text=Product3",
-  },
-  {
-    id: 4,
-    name: "Product 4",
+    name: "高熵营养丸",
     price: 29.99,
-    category: "Electronics",
-    image: "https://via.placeholder.com/300.png?text=Product4",
-  },
-  {
-    id: 5,
-    name: "Product 5",
-    price: 14.99,
-    category: "Clothing",
-    image: "https://via.placeholder.com/300.png?text=Product5",
-  },
-  {
-    id: 6,
-    name: "Product 6",
-    price: 39.99,
     category: "Home",
-    image: "https://via.placeholder.com/300.png?text=Product6",
-  },
-  {
-    id: 7,
-    name: "Product 7",
-    price: 24.99,
-    category: "Electronics",
-    image: "https://via.placeholder.com/300.png?text=Product7",
-  },
-  {
-    id: 8,
-    name: "Product 8",
-    price: 12.99,
-    category: "Clothing",
-    image: "https://via.placeholder.com/300.png?text=Product8",
-  },
-  {
-    id: 9,
-    name: "Product 9",
-    price: 59.99,
-    category: "Home",
-    image: "https://via.placeholder.com/300.png?text=Product9",
-  },
-  {
-    id: 10,
-    name: "Product 10",
-    price: 34.99,
-    category: "Electronics",
-    image: "https://via.placeholder.com/300.png?text=Product10",
-  },
-  {
-    id: 11,
-    name: "Product 11",
-    price: 18.99,
-    category: "Clothing",
-    image: "https://via.placeholder.com/300.png?text=Product11",
-  },
-  {
-    id: 12,
-    name: "Product 12",
-    price: 49.99,
-    category: "Home",
-    image: "https://via.placeholder.com/300.png?text=Product12",
-  },
-  {
-    id: 13,
-    name: "Product 13",
-    price: 29.99,
-    category: "Electronics",
-    image: "https://via.placeholder.com/300.png?text=Product13",
-  },
-  {
-    id: 14,
-    name: "Product 14",
-    price: 16.99,
-    category: "Clothing",
-    image: "https://via.placeholder.com/300.png?text=Product14",
-  },
-  {
-    id: 15,
-    name: "Product 15",
-    price: 44.99,
-    category: "Home",
-    image: "https://via.placeholder.com/300.png?text=Product15",
-  },
-  {
-    id: 16,
-    name: "Product 16",
-    price: 21.99,
-    category: "Electronics",
-    image: "https://via.placeholder.com/300.png?text=Product16",
-  },
-  {
-    id: 17,
-    name: "Product 17",
-    price: 11.99,
-    category: "Clothing",
-    image: "https://via.placeholder.com/300.png?text=Product17",
-  },
-  {
-    id: 18,
-    name: "Product 18",
-    price: 54.99,
-    category: "Home",
-    image: "https://via.placeholder.com/300.png?text=Product18",
-  },
-  {
-    id: 19,
-    name: "Product 19",
-    price: 31.99,
-    category: "Electronics",
-    image: "https://via.placeholder.com/300.png?text=Product19",
-  },
-  {
-    id: 20,
-    name: "Product 20",
-    price: 13.99,
-    category: "Clothing",
-    image: "https://via.placeholder.com/300.png?text=Product20",
+    image: nutrition_pills,
   },
 ];
 
