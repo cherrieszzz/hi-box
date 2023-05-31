@@ -46,7 +46,7 @@ export default function Navbar() {
             <Link to="/about">关于</Link>{" "}
           </li>
           <li className="mx-2">
-            <Link to="https://discord.com/channels/1048112565600931880/1096061711229923439">
+            <Link to="https://kook.top/6hMWwy">
               社群{" "}
             </Link>{" "}
           </li>
