@@ -23,10 +23,6 @@ export default function Navbar() {
         <ul className="flex items-center">
           <li className="mx-2">
             {" "}
-            <Link to="/docs">文档</Link>{" "}
-          </li>
-          <li className="mx-2">
-            {" "}
             <Link to="/goods">商城</Link>{" "}
           </li>
           <li className="mx-2">

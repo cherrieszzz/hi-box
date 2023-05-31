@@ -15,8 +15,7 @@ import Envir from './components/pages/Envir';
 import Docs from './components/pages/Docs';
 import Partner from './components/pages/Partner';
 import About from './components/pages/About';
-
-function App() {
+function App () {
   return (
     <BrowserRouter>
       <Routes>

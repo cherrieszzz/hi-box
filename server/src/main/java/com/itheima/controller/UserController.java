@@ -280,7 +280,8 @@ public class UserController {
 /*        userDto.setRoleName(Messages.Role.Role_Business);
         if (one.getFlag() == 0) {
             userDto.setRoleName(Messages.Role.Role_User);
-        }*/
+        }
+        */
 
         userDto.setSatoken(StpUtil.getTokenInfo().tokenValue);
         // 在登录时缓存user对象
